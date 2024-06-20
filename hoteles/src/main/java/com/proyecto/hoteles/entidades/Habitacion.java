@@ -4,7 +4,6 @@ package com.proyecto.hoteles.entidades;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.proyecto.hoteles.utils.TipoHabitacion;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -28,10 +27,10 @@ public class Habitacion {
     private long id;
     private long idHotel;
     private String numero;
-    private TipoHabitacion tipo;
+    private String tipo;
     private float precioNoche;
 
-    //Este atributo deberia estar aqui ??
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "habitacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Huesped> huespedes;
 

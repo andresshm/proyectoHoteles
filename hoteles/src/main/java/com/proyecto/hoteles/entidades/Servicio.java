@@ -2,6 +2,9 @@ package com.proyecto.hoteles.entidades;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +25,7 @@ public class Servicio {
     private String nombre;
     private String descripcion;
 
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
         name = "servicio_hotel", joinColumns = @JoinColumn(name = "servicio_id", referencedColumnName = "id"),

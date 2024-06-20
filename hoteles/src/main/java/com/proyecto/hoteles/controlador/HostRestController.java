@@ -1,9 +1,13 @@
 package com.proyecto.hoteles.controlador;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.hoteles.entidades.Huesped;
 import com.proyecto.hoteles.repositorios.HostRepository;
-import com.proyecto.hoteles.servicios.ServicioImpl;
+import com.proyecto.hoteles.servicios.ServicioHuesped;
+import com.proyecto.hoteles.utils.ListsUtil;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -29,7 +37,7 @@ public class HostRestController {
     HostRepository hostRepository;
 
     @Autowired
-    ServicioImpl servicio;
+    ServicioHuesped servicio;
 
 
     @GetMapping()
@@ -66,6 +74,14 @@ public class HostRestController {
         }
     }
 
+
+    @PatchMapping("/{id}")
+    public Huesped patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+        return servicio.updateHostByFields(id, fields);     
+    }
+
+
+
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody Huesped input) {
         //un huesped no puede salir antes de haberse registrado ni puede salir antes de haber entrado
@@ -90,11 +106,44 @@ public class HostRestController {
     }
 
 
+    @GetMapping("/filter")
+    public List<Huesped> getByParams(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String apellido,
+        @RequestParam(required = false) String documento,
+        @RequestParam(required = false) LocalDate checkIn,
+        @RequestParam(required = false) LocalDate checkOut) {
+            List<Huesped> hostsByName = servicio.findByName(nombre);
+            List<Huesped> hostsBySurname = servicio.findBySurname(apellido);
+            List<Huesped> hostsByDocument = servicio.findByDniPassport(documento);
+            List<Huesped> hostsByCheckin = new ArrayList<>(); 
+            List<Huesped> hostsByCheckout = new ArrayList<>();
+            
 
+            Set<Huesped> hostsFound = new HashSet<>();
+            if (nombre != null) {
+                hostsFound.addAll(hostsByName);
+            }
 
-    @PatchMapping("/{id}")
-    public Huesped patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        return servicio.updateHostByFields(id, fields);     
-    }
-    
+            if (apellido != null) {
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsBySurname);
+            }
+
+            if (documento != null) {
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDocument);
+            }
+
+            if (checkIn != null) {
+                hostsByCheckin = servicio.findByCheckIn(checkIn);
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckin);
+            }
+
+            if (checkOut != null) {
+                hostsByCheckout = servicio.findByCheckOut(checkOut);
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout);
+            }
+        
+            return new ArrayList<>(hostsFound);
+        }
+
 }

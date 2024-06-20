@@ -1,27 +1,39 @@
 package com.proyecto.hoteles.controlador;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Habitacion;
 import com.proyecto.hoteles.repositorios.RoomRepository;
+import com.proyecto.hoteles.servicios.ServicioHabitacion;
+import com.proyecto.hoteles.utils.ListsUtil;
 
 @RestController
 @RequestMapping("/habitacion")
 public class RoomRestController {
     @Autowired
     RoomRepository roomRepository;
+
+
+    @Autowired
+    ServicioHabitacion servicio;
 
 
     @GetMapping()
@@ -59,6 +71,15 @@ public class RoomRestController {
         }
     }
 
+
+
+    @PatchMapping("/{id}")
+    public Habitacion patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+        return servicio.updateRoomByFields(id, fields);     
+    }
+
+
+
     @PostMapping()
     public ResponseEntity<Habitacion> post(@RequestBody Habitacion input) {
         input.getHuespedes().forEach(x -> x.setHabitacion(input));
@@ -78,4 +99,48 @@ public class RoomRestController {
         roomRepository.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+
+   @GetMapping("/filter")
+    public List<Habitacion> getByParams(
+        @RequestParam(required = false) String numero,
+        @RequestParam(required = false) String tipo,
+        @RequestParam(required = false) Float precio
+        ) {
+            List<Habitacion> hostsByNumber = servicio.findByNumber(numero);
+            List<Habitacion> hostsByType = servicio.findByType(tipo);
+
+            //float no puede ser null porque es un tipo primitivo, pero Float si
+            //si es nulo, asignamos 0$ a precio para que no encuentre ninguna habitacion
+            //y no entorpezca la busqueda
+            Float floatWrapper = precio;
+            if(floatWrapper == null){
+                precio = 0.0f;
+            }else{
+                floatWrapper = precio;
+            }
+            List<Habitacion> hostsByPrice = servicio.findByPrice(precio);
+
+           Set<Habitacion> hostsFound = new HashSet<>();
+            if (numero != null) {
+                hostsFound.addAll(hostsByNumber);
+            }
+
+            if (tipo != null) {
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsByType);
+            }
+            
+
+            if (floatWrapper != null) {
+                ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPrice);
+            }
+        
+            return new ArrayList<>(hostsFound);
+           
+            
+    }
+
+
 }
