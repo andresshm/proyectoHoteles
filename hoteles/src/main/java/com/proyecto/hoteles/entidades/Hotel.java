@@ -21,6 +21,7 @@ public class Hotel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
+    private List<Long> services = new ArrayList<>();
     @Schema(example = "JC1")
     private String nombre;
     @Schema(example = "calle espinardo, nº 69")

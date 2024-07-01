@@ -1,15 +1,10 @@
 package com.proyecto.hoteles.controlador;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,17 +15,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.proyecto.hoteles.entidades.Huesped;
+import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HostRepository;
 import com.proyecto.hoteles.servicios.ServicioHuesped;
-import com.proyecto.hoteles.utils.ListsUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Host API", description = "Esta API sirve para gestionar los huespedes")
+@Tag(name = "Host API", description = "Esta API sirve para gestionar los huéspedes")
 @RestController
 @RequestMapping("/huesped")
 public class HostRestController {
@@ -40,32 +36,33 @@ public class HostRestController {
     @Autowired
     ServicioHuesped servicio;
 
-    @Operation(summary = "Devuelve una lista con todos los huespedes")
+    @Operation(summary = "Devuelve una lista con todos los huéspedes")
     @GetMapping()
-    public ResponseEntity<?>/* List<Huesped> */ findAll() {
-        // return hostRepository.findAll();
-        if (!hostRepository.findAll().isEmpty()) {
+    public ResponseEntity<?> findAll() {
+        /*if (!hostRepository.findAll().isEmpty()) {
             return new ResponseEntity<>(hostRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        }*/
+        return servicio.getAll();
     }
 
-    @Operation(summary = "Devuelve el huesped con el id seleccionado")
+    @Operation(summary = "Devuelve el huésped con el id seleccionado")
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
-        Optional<Huesped> host = hostRepository.findById(id);
+    public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
+        /*Optional<Huesped> host = hostRepository.findById(id);
         if (host.isPresent()) {
             return new ResponseEntity<>(host.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.getById(id);
     }
 
     @Operation(summary = "Permite actualizar un elemento completo")
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Huesped input) {
-        Optional<Huesped> optionalHuesped = hostRepository.findById(id);
+    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Huesped input) throws BussinesRuleException {
+        /*Optional<Huesped> optionalHuesped = hostRepository.findById(id);
         if (optionalHuesped.isPresent()) {
             Huesped newHuesped = optionalHuesped.get();
             newHuesped.setNombre(input.getNombre());
@@ -77,7 +74,8 @@ public class HostRestController {
             return new ResponseEntity<>(save, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.put(id, input);
     }
 
     @Operation(summary = "Permite actualizar un campo concreto")
@@ -86,43 +84,46 @@ public class HostRestController {
         return servicio.updateHostByFields(id, fields);
     }
 
-    @Operation(summary = "Registra un huesped en la base de datos")
+    @Operation(summary = "Registra un huésped en la base de datos")
     @PostMapping()
-    public ResponseEntity<?> post(@RequestBody Huesped input) {
+    public ResponseEntity<?> post(@RequestBody Huesped input) throws BussinesRuleException {
         // un huesped no puede salir antes de haberse registrado ni puede salir antes de
         // haber entrado
-        if (input.getFechaCheckout().isBefore(LocalDate.now())
+        /*if (input.getFechaCheckout().isBefore(LocalDate.now())
                 || input.getFechaCheckin().isAfter(input.getFechaCheckout())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Huesped save = hostRepository.save(input);
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(save);*/
+        return servicio.post(input);
     }
 
-    @Operation(summary = "Elimina el huesped con el id seleccionado")
+    @Operation(summary = "Elimina el huésped con el id seleccionado")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
         /*
          * hostRepository.deleteById(id);
          * return new ResponseEntity<>(HttpStatus.OK);
          */
-        Optional<Huesped> host = hostRepository.findById(id);
+        /*Optional<Huesped> host = hostRepository.findById(id);
         if (host.isPresent()) {
             hostRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.deleteById(id);
     }
 
-    @Operation(summary = "Elimina todos los huespedes de la base de datos")
+    @Operation(summary = "Elimina todos los huéspedes de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
-        hostRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
+        /*hostRepository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);*/
+        return servicio.deleteAll();
     }
 
-    @Operation(summary = "Permite buscar un huesped filtrando por sus campos")
+    @Operation(summary = "Permite buscar un huésped filtrando por sus campos")
     @GetMapping("/filter")
     public List<Huesped> getByParams(
             @RequestParam(required = false) String nombre,
@@ -130,7 +131,9 @@ public class HostRestController {
             @RequestParam(required = false) String documento,
             @RequestParam(required = false) LocalDate checkIn,
             @RequestParam(required = false) LocalDate checkOut) {
-        List<Huesped> hostsByName = servicio.findByName(nombre);
+
+                return servicio.filter(nombre, apellido, documento, checkIn, checkOut);
+        /*List<Huesped> hostsByName = servicio.findByName(nombre);
         List<Huesped> hostsBySurname = servicio.findBySurname(apellido);
         List<Huesped> hostsByDocument = servicio.findByDniPassport(documento);
         List<Huesped> hostsByCheckin = new ArrayList<>();
@@ -165,7 +168,7 @@ public class HostRestController {
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout, vaciaPorNotFound);
         }
 
-        return new ArrayList<>(hostsFound);
+        return new ArrayList<>(hostsFound);*/
     }
 
 }

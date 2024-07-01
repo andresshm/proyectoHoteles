@@ -1,14 +1,9 @@
 package com.proyecto.hoteles.controlador;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Habitacion;
+import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.RoomRepository;
 import com.proyecto.hoteles.servicios.ServicioHabitacion;
-import com.proyecto.hoteles.utils.ListsUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,27 +38,29 @@ public class RoomRestController {
 
     @Operation(summary = "Devuelve una lista con todos las habitaciones")
     @GetMapping()
-    public ResponseEntity<List<Habitacion>> findAll() {
+    public ResponseEntity<?> findAll() {
         /*
          * List<Habitacion> rooms = roomRepository.findAll();
          * return new ResponseEntity<>(rooms, HttpStatus.OK);
          */
-        if (!roomRepository.findAll().isEmpty()) {
+        /*if (!roomRepository.findAll().isEmpty()) {
             return new ResponseEntity<>(roomRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        }*/
+        return servicio.getAll();
     }
 
     @Operation(summary = "Devuelve la habitacion con el id seleccionado")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id) {
-        Optional<Habitacion> room = roomRepository.findById(id);
+        /*Optional<Habitacion> room = roomRepository.findById(id);
         if (room.isPresent()) {
             return new ResponseEntity<>(room.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.getById(id);
     }
 
     @Operation(summary = "Permite actualizar un elemento completo")
@@ -72,8 +69,8 @@ public class RoomRestController {
         @ApiResponse(responseCode = "200", description = "Room updated successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
     })
-    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Habitacion input) {
-        Optional<Habitacion> optionalRoom = roomRepository.findById(id);
+    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Habitacion input) throws BussinesRuleException {
+        /*Optional<Habitacion> optionalRoom = roomRepository.findById(id);
         if (optionalRoom.isPresent()) {
             Habitacion newRoom = optionalRoom.get();
             // Inicializamos los atributos
@@ -90,7 +87,8 @@ public class RoomRestController {
             return new ResponseEntity<>(save, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.put(id, input);
     }
 
     @Operation(summary = "Permite actualizar un campo concreto")
@@ -105,36 +103,39 @@ public class RoomRestController {
         @ApiResponse(responseCode = "201", description = "Room added successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
     })
-    public ResponseEntity<Habitacion> post(@RequestBody Habitacion input) {
-        if (servicio.validRoom(input.getNumero(), input.getPrecioNoche())) {//si no es valida
+    public ResponseEntity<?> post(@RequestBody Habitacion input) {
+        /*if (servicio.validRoom(input.getNumero(), input.getPrecioNoche())) {//si no es valida
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         input.getHuespedes().forEach(x -> x.setHabitacion(input));
         Habitacion save = roomRepository.save(input);
-        return new ResponseEntity<>(save, HttpStatus.CREATED);
+        return new ResponseEntity<>(save, HttpStatus.CREATED);*/
+        return servicio.post(input);
     }
 
     @Operation(summary = "Elimina la habitacion con el id seleccionado")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
         /*
          * roomRepository.deleteById(id);
          * return new ResponseEntity<>(HttpStatus.OK);
          */
-        Optional<Habitacion> room = roomRepository.findById(id);
+        /*Optional<Habitacion> room = roomRepository.findById(id);
         if (room.isPresent()) {
             roomRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.deleteById(id);
     }
 
     @Operation(summary = "Elimina todos las habitaciones de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
-        roomRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
+        /*roomRepository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);*/
+        return servicio.deleteAll();
     }
 
     @Operation(summary = "Permite buscar una habitacion filtrando por sus campos")
@@ -143,12 +144,13 @@ public class RoomRestController {
             @RequestParam(required = false) String numero,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) Float precio) {
-        List<Habitacion> hostsByNumber = servicio.findByNumber(numero);
+                return servicio.filter(numero, tipo, precio);
+        /*List<Habitacion> hostsByNumber = servicio.findByNumber(numero);
         List<Habitacion> hostsByType = servicio.findByType(tipo);
 
         // float no puede ser null porque es un tipo primitivo, pero Float si
         // si es nulo, asignamos 0$ a precio para que no encuentre ninguna habitacion
-        // y no entorpezca la busqueda
+        // y no entorpezca la busqueda 
         Float floatWrapper = precio;
         if (floatWrapper == null) {
             precio = 0.0f;
@@ -173,14 +175,14 @@ public class RoomRestController {
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPrice, vaciaPorNotFound);
         }
 
-        return new ArrayList<>(hostsFound);
+        return new ArrayList<>(hostsFound);*/
 
     }
 
-    @Operation(summary = "Permite añadir huespedes a la habitacion")
+    /*@Operation(summary = "Permite añadir huespedes a la habitacion")
     @PostMapping("/{roomId}/hosts/{hostId}")
     public void addHostToRoom(@PathVariable Long roomId, @PathVariable Long hostId) {
         servicio.addHostToRoom(roomId, hostId);
-    }
+    }*/
 
 }

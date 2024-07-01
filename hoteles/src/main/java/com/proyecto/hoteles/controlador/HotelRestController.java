@@ -1,14 +1,9 @@
 package com.proyecto.hoteles.controlador;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Hotel;
+import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.servicios.ServicioHotel;
-import com.proyecto.hoteles.utils.ListsUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,24 +38,26 @@ public class HotelRestController {
 
     @Operation(summary = "Devuelve una lista con todos los hoteles")
     @GetMapping()
-    public ResponseEntity<?>/* List<Hotel> */ findAll() {
-        // return hotelRepository.findAll();
-        if (!hotelRepository.findAll().isEmpty()) {
+    public ResponseEntity<?> findAll() {
+        // return hotelRepository.findAll ();
+        /*if (!hotelRepository.findAll().isEmpty()) {
             return new ResponseEntity<>(hotelRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        }*/
+        return servicio.getAll();
     }
 
     @Operation(summary = "Devuelve el hotel con el id seleccionado")
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
-        Optional<Hotel> hotel = hotelRepository.findById(id);
+    public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
+        /*Optional<Hotel> hotel = hotelRepository.findById(id);
         if (hotel.isPresent()) {
             return new ResponseEntity<>(hotel.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.getById(id);
     }
 
     @Operation(summary = "Permite actualizar un elemento completo")
@@ -69,8 +66,8 @@ public class HotelRestController {
         @ApiResponse(responseCode = "200", description = "Hotel updated successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
     })
-    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Hotel input) {
-        Optional<Hotel> optionalhotel = hotelRepository.findById(id);
+    public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Hotel input) throws BussinesRuleException {
+        /*Optional<Hotel> optionalhotel = hotelRepository.findById(id);
         if (optionalhotel.isPresent()) {
             Hotel newhotel = optionalhotel.get();
             if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
@@ -86,7 +83,8 @@ public class HotelRestController {
             return new ResponseEntity<>(save, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.put(id, input);
     }
 
     @Operation(summary = "Permite actualizar un campo concreto")
@@ -102,7 +100,7 @@ public class HotelRestController {
         @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
     })
     public ResponseEntity<?> post(@RequestBody Hotel input) {
-        if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
+        /*if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -116,30 +114,33 @@ public class HotelRestController {
 
         });
         Hotel save = hotelRepository.save(input);
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(save);*/
+        return servicio.post(input);
     }
 
     @Operation(summary = "Elimina el hotel con el id seleccionado")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
         /*
          * hotelRepository.deleteById(id);
          * return new ResponseEntity<>(HttpStatus.OK);
          */
-        Optional<Hotel> hotel = hotelRepository.findById(id);
+        /*Optional<Hotel> hotel = hotelRepository.findById(id);
         if (hotel.isPresent()) {
             hotelRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }*/
+        return servicio.deleteById(id);
     }
 
     @Operation(summary = "Elimina todos los hoteles de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
-        hotelRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
+        /*hotelRepository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);*/
+        return servicio.deleteAll();
     }
 
     @Operation(summary = "Permite buscar un hotel filtrando por sus campos")
@@ -150,7 +151,8 @@ public class HotelRestController {
             @RequestParam(required = false) String telefono,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String web) {
-        List<Hotel> hostsByName = servicio.findByName(nombre);
+                return servicio.filter(nombre, direccion, telefono, email, web);
+        /*List<Hotel> hostsByName = servicio.findByName(nombre);
         List<Hotel> hostsByAddress = servicio.findByAddress(direccion);
         List<Hotel> hostsByPhone = servicio.findByPhone(telefono);
         List<Hotel> hostsByMail = servicio.findByMail(email);
@@ -182,10 +184,11 @@ public class HotelRestController {
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByWebsite, vaciaPorNotFound);
         }
 
-        return new ArrayList<>(hostsFound);
+        return new ArrayList<>(hostsFound);*/
+        
     }
 
-    @Operation(summary = "Permite añadir habitaciones al hotel")
+    /*@Operation(summary = "Permite añadir habitaciones al hotel")
     @PostMapping("/{hotelId}/rooms/{roomId}")
     public void addRoomToHotel(@PathVariable Long hotelId, @PathVariable Long roomId) {
         servicio.addRoomToHotel(hotelId, roomId);
@@ -195,6 +198,6 @@ public class HotelRestController {
     @PostMapping("/{hotelId}/services/{serviceId}")
     public void addServiceToHotel(@PathVariable Long hotelId, @PathVariable Long serviceId) {
         servicio.addServiceToHotel(hotelId, serviceId);
-    }
+    }*/
 
 }

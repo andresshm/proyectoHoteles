@@ -21,6 +21,7 @@ public class Huesped {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
+    private long idHabitacion;
     @Schema(example = "Juan Carlos")
     private String nombre;
     @Schema(example = "Torres")
