@@ -151,53 +151,8 @@ public class HotelRestController {
             @RequestParam(required = false) String telefono,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String web) {
-                return servicio.filter(nombre, direccion, telefono, email, web);
-        /*List<Hotel> hostsByName = servicio.findByName(nombre);
-        List<Hotel> hostsByAddress = servicio.findByAddress(direccion);
-        List<Hotel> hostsByPhone = servicio.findByPhone(telefono);
-        List<Hotel> hostsByMail = servicio.findByMail(email);
-        List<Hotel> hostsByWebsite = servicio.findByWebsite(web);
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false, q = false, r = false, s = false;
-        Set<Hotel> hostsFound = new HashSet<>();
-        if (p = nombre != null) {
-            hostsFound.addAll(hostsByName);
-            vaciaPorNotFound.add(p);
-        }
-
-        if (q = direccion != null) {
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByAddress, vaciaPorNotFound);
-            vaciaPorNotFound.add(q);
-        }
-
-        if (r = telefono != null) {
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPhone, vaciaPorNotFound);
-            vaciaPorNotFound.add(r);
-        }
-
-        if (s = email != null) {
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByMail, vaciaPorNotFound);
-            vaciaPorNotFound.add(s);
-        }
-
-        if (web != null) {
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByWebsite, vaciaPorNotFound);
-        }
-
-        return new ArrayList<>(hostsFound);*/
-        
+                return servicio.filter(nombre, direccion, telefono, email, web);        
     }
 
-    /*@Operation(summary = "Permite añadir habitaciones al hotel")
-    @PostMapping("/{hotelId}/rooms/{roomId}")
-    public void addRoomToHotel(@PathVariable Long hotelId, @PathVariable Long roomId) {
-        servicio.addRoomToHotel(hotelId, roomId);
-    }
-
-    @Operation(summary = "Permite añadir servicios al hotel")
-    @PostMapping("/{hotelId}/services/{serviceId}")
-    public void addServiceToHotel(@PathVariable Long hotelId, @PathVariable Long serviceId) {
-        servicio.addServiceToHotel(hotelId, serviceId);
-    }*/
 
 }

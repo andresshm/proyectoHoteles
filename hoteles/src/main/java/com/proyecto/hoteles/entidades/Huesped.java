@@ -2,7 +2,10 @@ package com.proyecto.hoteles.entidades;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.proyecto.hoteles.utils.CustomLocalDateDeserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
@@ -28,9 +31,16 @@ public class Huesped {
     private String apellido;
     @Schema(example = "48759851-L")
     private String dniPasaporte;
-    @Schema(example = "2024-06-15")
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "17-06-2024")
+    @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDate fechaCheckin;
-    @Schema(example = "2024-06-30")
+   
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "30-09-2024")//sin el type string salen cosas raras, trata el ejemplo como un string, que no da problemas
+    @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDate fechaCheckout;
 
     @JsonIgnore

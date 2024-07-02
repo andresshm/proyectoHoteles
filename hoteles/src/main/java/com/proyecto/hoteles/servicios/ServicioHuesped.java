@@ -42,22 +42,25 @@ public class ServicioHuesped {
                 // checkin 
                 if (key.equals("fechaCheckin")) {
                     String dateString = (String) value;
-                    LocalDate fecha = null;
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy");
+                    LocalDate fecha = null;//LocalDate.parse(dateString, formatter);
                     try {
-                        fecha = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
+                        fecha = LocalDate.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
-                        System.out.println("Invalid date format: " + e.getMessage());
+                        fecha = LocalDate.parse(dateString, formatter2);
                     }
                     optHost.get().setFechaCheckin(fecha);
 
                 } else if (key.equals("fechaCheckout")) {
-
                     String dateString = (String) value;
-                    LocalDate fecha = null;
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy");
+                    LocalDate fecha = null;//LocalDate.parse(dateString, formatter);
                     try {
-                        fecha = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
+                        fecha = LocalDate.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
-                        System.out.println("Invalid date format: " + e.getMessage());
+                        fecha = LocalDate.parse(dateString, formatter2);
                     }
                     optHost.get().setFechaCheckout(fecha);
 
@@ -106,6 +109,7 @@ public class ServicioHuesped {
     }
 
     public List<Huesped> findByCheckIn(LocalDate checkIn) {
+        
         return hostRepository.findAll().stream()
         .filter(h -> h.getFechaCheckin().equals(checkIn))
         .collect(Collectors.toList());
@@ -118,7 +122,7 @@ public class ServicioHuesped {
 
     public List<Huesped> findByCheckOut(LocalDate checkOut) {
         return hostRepository.findAll().stream()
-        .filter(h -> h.getFechaCheckin().equals(checkOut))
+        .filter(h -> h.getFechaCheckout().equals(checkOut))
         .collect(Collectors.toList());
         /*for (Huesped h : hostRepository.findAll()) {
             if (h.getFechaCheckin().isAfter(checkOut)) {
@@ -129,7 +133,7 @@ public class ServicioHuesped {
 
 
 
-    public List<Huesped> filter(String nombre, String apellido, String documento, LocalDate checkIn, LocalDate checkOut){
+    public List<Huesped> filter(String nombre, String apellido, String documento, String checkIn, String checkOut) throws BussinesRuleException{
         List<Huesped> hostsByName = new ArrayList<>();
         List<Huesped> hostsBySurname = new ArrayList<>();
         List<Huesped> hostsByDocument = new ArrayList<>();
@@ -138,6 +142,12 @@ public class ServicioHuesped {
         Set<Huesped> hostsFound = new HashSet<>();
         List<Boolean> vaciaPorNotFound = new ArrayList<>();
         boolean p = false, q = false, r = false, s = false;
+
+        LocalDate checkInDate = null;
+        LocalDate checkOutDate = null;
+
+
+
         if (p = nombre != null) {
             hostsByName = findByName(nombre);
             hostsFound.addAll(hostsByName);
@@ -157,17 +167,36 @@ public class ServicioHuesped {
         }
 
         if (s = checkIn != null) {
-            hostsByCheckin = findByCheckIn(checkIn);
+            checkInDate = stringToDate(checkIn);
+            hostsByCheckin = findByCheckIn(checkInDate);
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckin, vaciaPorNotFound);
             vaciaPorNotFound.add(s);
         }
 
         if (checkOut != null) {
-            hostsByCheckout = findByCheckOut(checkOut);
+            checkOutDate = stringToDate(checkOut);
+            hostsByCheckout = findByCheckOut(checkOutDate);
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout, vaciaPorNotFound);
         }
 
         return new ArrayList<>(hostsFound);
+    }
+
+
+    private LocalDate stringToDate(String fecha) throws BussinesRuleException{
+        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy][d-M-yyyy]");
+        LocalDate f =  LocalDate.parse(fecha, formatter);
+        return f;*/
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy][d-M-yyyy]");
+        LocalDate f = null;
+        try {
+            f = LocalDate.parse(fecha, formatter);
+            return f;
+        } catch (Exception e) {
+            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd-mm-yyyy]", HttpStatus.BAD_REQUEST);
+        }
+        
     }
 
 
@@ -194,7 +223,7 @@ public class ServicioHuesped {
 
 
 private void addHostToRoom(long idRoom, long idHost){
-    Habitacion habitacion = roomRepository.findById(idRoom).orElseThrow(() -> new RuntimeException("Room not found"));
+    Habitacion habitacion = roomRepository.findById(idRoom).orElseThrow(() -> new RuntimeException("Host not found"));
     Huesped host = hostRepository.findById(idHost).orElseThrow(() -> new RuntimeException("Host not found"));
     
     habitacion.addHost(host);
@@ -230,10 +259,12 @@ private void addHostToRoom(long idRoom, long idHost){
 
 
     public ResponseEntity<?> post(Huesped input) throws BussinesRuleException{
+        
         if (input.getFechaCheckout().isBefore(LocalDate.now())
                 || input.getFechaCheckin().isAfter(input.getFechaCheckout())) {
             throw new BussinesRuleException("400", "Bad request", "Error en la peticion", HttpStatus.BAD_REQUEST);
         }
+        
         Huesped save = hostRepository.save(input);
         return ResponseEntity.ok(save);
     }
