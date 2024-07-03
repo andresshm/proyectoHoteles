@@ -43,6 +43,12 @@ public class Hotel {
 
 
     /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
+    public Hotel(){
+        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    }
+
+
+
     public Hotel(String nombre, String direccion, String telefono, String email, String sitioWeb) {
         this.nombre = nombre;
         this.direccion = direccion;

@@ -38,6 +38,12 @@ public class Servicio {
 
 
 /*CONSTRUCTORES NECESARIOS SOLO PARA TESTS */
+
+    public Servicio(){
+        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+
+    }
+
     public Servicio(String nombre, String descripcion){
         this.nombre=nombre;
         this.descripcion = descripcion;

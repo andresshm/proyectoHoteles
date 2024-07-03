@@ -50,6 +50,12 @@ public class Huesped {
 
 
     /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
+
+    public Huesped(){
+        
+        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    }
+
     public Huesped(String nombre, String apellido, String dniPasaporte) {
         this.nombre = nombre;
         this.apellido = apellido;

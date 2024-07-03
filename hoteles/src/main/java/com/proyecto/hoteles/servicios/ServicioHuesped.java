@@ -33,18 +33,18 @@ public class ServicioHuesped {
     @Autowired
     private RoomRepository roomRepository;
 
-    public Huesped updateHostByFields(long id, Map<String, Object> fields) {
+    public Huesped updateHostByFields(long id, Map<String, Object> fields)  {
         Optional<Huesped> optHost = hostRepository.findById(id);
 
         if (optHost.isPresent()) {
             fields.forEach((key, value) -> {
-                // Falta comprobar que la fecha de checkout no sean nunca inferior a la de
-                // checkin 
+                //FALTA COMPROBAR QUE LA FECHA ESTE BIEN FORMATEADA, PERO NO SE NI COMO
+                /*Estos dos if se encargan de parsear las fechas */
                 if (key.equals("fechaCheckin")) {
                     String dateString = (String) value;
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
-                    LocalDateTime fecha = null;//LocalDate.parse(dateString, formatter);
+                    LocalDateTime fecha = null;
                     try {
                         fecha = LocalDateTime.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
@@ -56,21 +56,42 @@ public class ServicioHuesped {
                     String dateString = (String) value;
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
-                    LocalDateTime fecha = null;//LocalDate.parse(dateString, formatter);
+                    LocalDateTime fecha = null;
                     try {
                         fecha = LocalDateTime.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
-                        fecha = LocalDateTime.parse(dateString, formatter2);
+                        fecha = LocalDateTime.parse(dateString, formatter2);                       
                     }
-                    optHost.get().setFechaCheckout(fecha);
 
-                } else {
+                    /*Esto comprueba que la fecha de checkout no sea antes de este momento
+                     * ni antes de la fecha de salida. No se porque no tira la excepcion en el swagger pero algo hara
+                     */
+                    if(optHost.get().getFechaCheckin().isAfter(fecha) || fecha.isBefore(LocalDateTime.now())){
+                        try {
+                            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. Introdujo una fecha de salida anterior a la fecha de entrada", HttpStatus.BAD_REQUEST);
+                        } catch (BussinesRuleException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+
+                        optHost.get().setFechaCheckout(fecha);
+                    }
+
+
+                }else if(key.equals("idHabitacion")){
+                    /*Este else-if es para gestionar que un huesped solo este en una habitacion
+                     * y que se pueda cambiar desde el PATCH
+                     */
+                    if(Long.parseLong(value.toString())!=0){
+                        optHost.get().setIdHabitacion(Long.parseLong(value.toString()));
+                        addHostToRoom(optHost.get().getIdHabitacion(), optHost.get().getId());
+                    } 
+                }else {
                     // Esto esta bien, lo de arriba es tremenda ñapa
                     Field field = ReflectionUtils.findField(Huesped.class, key);
                     field.setAccessible(true);
                     ReflectionUtils.setField(field, optHost.get(), value);
                 }
-
             });
 
             return hostRepository.save(optHost.get());
@@ -89,23 +110,12 @@ public class ServicioHuesped {
         return hostRepository.findAll().stream()
                 .filter(h -> h.getApellido().equalsIgnoreCase(surname))
                 .collect(Collectors.toList());
-        /*for (Huesped h : hostRepository.findAll()) {
-            if (h.getApellido().equalsIgnoreCase(surname)) {
-                hosts.add(h);
-            }
-        }*/
-        
     }
 
     public List<Huesped> findByDniPassport(String document) {
         return hostRepository.findAll().stream()
                 .filter(h -> h.getDniPasaporte().equalsIgnoreCase(document))
                 .collect(Collectors.toList());
-        /*for (Huesped h : hostRepository.findAll()) {
-            if (h.getDniPasaporte().equalsIgnoreCase(document)) {
-                hosts.add(h);
-            }
-        }*/
     }
 
     public List<Huesped> findByCheckIn(LocalDateTime checkIn) {
@@ -113,26 +123,16 @@ public class ServicioHuesped {
         return hostRepository.findAll().stream()
         .filter(h -> h.getFechaCheckin().equals(checkIn))
         .collect(Collectors.toList());
-        /*for (Huesped h : hostRepository.findAll()) {
-            if (h.getFechaCheckin().isAfter(checkIn)) {
-                hosts.add(h);
-            }
-        }*/
     }
 
     public List<Huesped> findByCheckOut(LocalDateTime checkOut) {
         return hostRepository.findAll().stream()
         .filter(h -> h.getFechaCheckout().equals(checkOut))
         .collect(Collectors.toList());
-        /*for (Huesped h : hostRepository.findAll()) {
-            if (h.getFechaCheckin().isAfter(checkOut)) {
-                hosts.add(h); 
-            }
-        }*/
     }
 
 
-
+//llevar al final este y los de arriba
     public List<Huesped> filter(String nombre, String apellido, String documento, String checkIn, String checkOut) throws BussinesRuleException{
         List<Huesped> hostsByName = new ArrayList<>();
         List<Huesped> hostsBySurname = new ArrayList<>();
@@ -184,10 +184,6 @@ public class ServicioHuesped {
 
 
     private LocalDateTime stringToDate(String fecha) throws BussinesRuleException{
-        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy][d-M-yyyy]");
-        LocalDate f =  LocalDate.parse(fecha, formatter);
-        return f;*/
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy HH:mm][d-M-yyyy H:m]");
         LocalDateTime f = null;
         try {
@@ -196,7 +192,6 @@ public class ServicioHuesped {
         } catch (Exception e) {
             throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd-mm-yyyy HH:mm]", HttpStatus.BAD_REQUEST);
         }
-        
     }
 
 
@@ -240,15 +235,19 @@ private void addHostToRoom(long idRoom, long idHost){
             newHuesped.setDniPasaporte(input.getDniPasaporte());
             newHuesped.setFechaCheckin(input.getFechaCheckin());
             newHuesped.setFechaCheckout(input.getFechaCheckout());
-            //si cambio el idHabitacion el huesped se asocia a esa habitacion
-            if(newHuesped.getIdHabitacion()==0){
+            newHuesped.setIdHabitacion(input.getIdHabitacion());
+
+            /*Si la habitacion con la que lo quiero relacionar no es 0 (valor por defecto)
+            * entonces asocialo con esa habitacion
+            */
+            if(newHuesped.getIdHabitacion()!=0){
+                if(roomRepository.existsById(newHuesped.getIdHabitacion()))
+                    throw new BussinesRuleException("404","Not Found", "Error validacion, la habitacion con id " + newHuesped.getIdHabitacion() + " no existe", HttpStatus.NOT_FOUND);
                 newHuesped.setIdHabitacion(input.getIdHabitacion());
                 newHuesped.setHabitacion(input.getHabitacion());
                 addHostToRoom(input.getIdHabitacion(), id);
-            }else{
-                //Si el huesped ya esta vinculado a una habitacion no se puede vincular a otra
-                throw new BussinesRuleException("400", "Bad request", "Error en la peticion", HttpStatus.BAD_REQUEST);
             }
+
             Huesped save = hostRepository.save(newHuesped);
             return new ResponseEntity<>(save, HttpStatus.OK);
         } else {
@@ -260,12 +259,26 @@ private void addHostToRoom(long idRoom, long idHost){
 
     public ResponseEntity<?> post(Huesped input) throws BussinesRuleException{
         
+        /*Compruebo que un cliente no se cree con una fecha de salida anterior al momento actual
+         * y que la fecha de salida no sea antes de la fecha de entrada
+         */
         if (input.getFechaCheckout().isBefore(LocalDateTime.now())
                 || input.getFechaCheckin().isAfter(input.getFechaCheckout())) {
             throw new BussinesRuleException("400", "Bad request", "Error en la peticion", HttpStatus.BAD_REQUEST);
         }
+
         
+        /*Si no lo creo antes del if de abajo, el huesped aun no esta en el repositorio
+         * y el metodo addHostToRoom no lo puede encontrar y salta excepcion
+         */
         Huesped save = hostRepository.save(input);
+
+        /*Si la habitacion con la que lo quiero relacionar no es 0 (valor por defecto)
+         * entonces asocialo con esa habitacion
+         */
+        if(input.getIdHabitacion()!=0){
+            addHostToRoom(input.getIdHabitacion(), input.getId());
+        }
         return ResponseEntity.ok(save);
     }
 

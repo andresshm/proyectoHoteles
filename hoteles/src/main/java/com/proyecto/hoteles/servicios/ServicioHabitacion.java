@@ -183,18 +183,19 @@ public boolean validRoom(String s, float n){
             newRoom.setPrecioNoche(input.getPrecioNoche());
             newRoom.setTipo(input.getTipo());
             
-            //si cambio el idHotel la habitacion se asocia a ese hotel
-            if(newRoom.getIdHotel()==0){
+            
+            /*Si la habitacion con la que lo quiero relacionar no es 0 (valor por defecto)
+            * entonces asocialo con esa habitacion
+            */
+            if(newRoom.getIdHotel()!=0){
+                if(hotelRepository.existsById(newRoom.getIdHotel()))
+                    throw new BussinesRuleException("404","Not Found", "Error validacion, el hotel con id " + newRoom.getIdHotel() + " no existe", HttpStatus.NOT_FOUND);
                 newRoom.setIdHotel(input.getIdHotel());
                 newRoom.setHotel(input.getHotel());
                 addRoomToHotel(input.getIdHotel(), id);
-            }else{
-                //Si la habitacion ya esta vinculada a un hotel no se puede vincular a otro, por lo menos a dia d hoy
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
             }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new BussinesRuleException("400","Bad request", "Precio o número de habitación no validos, estos parámetros no admiten caracteres", HttpStatus.BAD_REQUEST);
             }
             Habitacion save = roomRepository.save(newRoom);
             return new ResponseEntity<>(save, HttpStatus.OK);
@@ -205,12 +206,35 @@ public boolean validRoom(String s, float n){
 
 
 
-    public ResponseEntity<?> post(Habitacion input){
+    public ResponseEntity<?> post(Habitacion input) throws BussinesRuleException{
         if (validRoom(input.getNumero(), input.getPrecioNoche())) {//si no es valida
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new BussinesRuleException("400","Bad request", "Precio no valido, el precio no admite caracteres", HttpStatus.BAD_REQUEST);
         }
-        input.getHuespedes().forEach(x -> x.setHabitacion(input));
+        
+        //En principio esto es para que se cree en cascada
+        input.getHuespedes().forEach(x -> {
+            x.setHabitacion(input);
+        });
+        /*Si no lo creo antes del if de abajo, el huesped aun no esta en el repositorio
+         * y el metodo addHostToRoom no lo puede encontrar y salta excepcion
+         */
         Habitacion save = roomRepository.save(input);
+
+        /*Si la habitacion con la que lo quiero relacionar no es 0 (valor por defecto)
+         * entonces asocialo con esa habitacion
+         */
+        if(input.getIdHotel()!=0){
+            addRoomToHotel(input.getIdHotel(), input.getId());
+        }
+
+        /*Esto es para que los huespedes guarden el ID*/
+        input.getHuespedes().forEach(x -> {
+            x.setIdHabitacion(x.getHabitacion().getId());
+            //Si no meto save y flush no actualiza el huesped en la BD
+            hostRepository.saveAndFlush(x);
+        });
+
+
         return new ResponseEntity<>(save, HttpStatus.CREATED);
     }
 

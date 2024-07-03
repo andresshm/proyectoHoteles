@@ -51,6 +51,13 @@ public class Habitacion {
 
     
     /* CONSTRUCTOR SOLO NECESARIO PARA HACER TESTS */
+
+    public Habitacion(){
+        
+        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    }
+
+
     public Habitacion(String numero, String tipo, float precioNoche) {
         this.numero = numero;
         this.tipo = tipo;
