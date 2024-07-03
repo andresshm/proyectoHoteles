@@ -201,14 +201,15 @@ private void addServiceToHotel(long idHotel, List<Long> idServices){
 
 
 
-    public ResponseEntity<?> post(Hotel input){
+    public ResponseEntity<?> post(Hotel input) throws BussinesRuleException{
         if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new BussinesRuleException("400","Bad request", "Error en el número de teléfono. No se admiten caracteres", HttpStatus.BAD_REQUEST);
         }
 
         input.getHabitaciones().forEach(x -> x.setHotel(input));
         input.getHabitaciones().forEach(x -> x.getHuespedes().forEach(z -> z.setHabitacion(x)));
 
+        //esto esta raro, habria que sacar la ultima linea abajo y la primera aqui arriba
         input.getServicios().forEach(x -> {
             List<Hotel> hoteles = new ArrayList<>();
             hoteles.add(input);

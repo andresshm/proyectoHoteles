@@ -99,7 +99,7 @@ public class HotelRestController {
         @ApiResponse(responseCode = "201", description = "Hotel added successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
     })
-    public ResponseEntity<?> post(@RequestBody Hotel input) {
+    public ResponseEntity<?> post(@RequestBody Hotel input) throws BussinesRuleException {
         /*if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

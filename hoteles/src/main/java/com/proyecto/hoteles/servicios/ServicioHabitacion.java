@@ -155,12 +155,12 @@ public boolean validRoom(String s, float n){
 
 
 
-    public ResponseEntity<?> getById(long id){
+    public ResponseEntity<?> getById(long id) throws BussinesRuleException{
         Optional<Habitacion> room = roomRepository.findById(id);
         if (room.isPresent()) {
             return new ResponseEntity<>(room.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new BussinesRuleException("404","Not Found", "Error validacion, la habitacion con id " + id + " no existe", HttpStatus.NOT_FOUND);
         }
     }
 

@@ -40,10 +40,29 @@ public class Hotel {
     private List<Habitacion> habitaciones; // No puede ser una linkedlist porque en el swagger da un error 500 en el
                                            // POST
 
+
+
+    /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
+    public Hotel(String nombre, String direccion, String telefono, String email, String sitioWeb) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.email = email;
+        this.sitioWeb = sitioWeb;
+    }
+
+
+    public Hotel(long id){
+        this.id = id;
+    }
+
+
     public void addRoom(Habitacion room) {
         habitaciones.add(room);
         room.setHotel(this);
     }
+
+
 
     public void addService(Servicio service) {
         servicios.add(service);

@@ -37,6 +37,25 @@ public class Servicio {
     private List<Hotel> hoteles = new ArrayList<>();
 
 
+/*CONSTRUCTORES NECESARIOS SOLO PARA TESTS */
+    public Servicio(String nombre, String descripcion){
+        this.nombre=nombre;
+        this.descripcion = descripcion;
+    }
+
+    public Servicio(long id){
+        this.id = id;
+    }
+
+    public Servicio(long id, String nombre, String descripcion){
+        this.id = id;
+        this.nombre=nombre;
+        this.descripcion = descripcion;
+    }
+
+
+
+
     public void addHotel(Hotel hotel) {
         hoteles.add(hotel);
         List<Servicio> servicios = hotel.getServicios();

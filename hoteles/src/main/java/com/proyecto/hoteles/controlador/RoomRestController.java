@@ -53,7 +53,7 @@ public class RoomRestController {
 
     @Operation(summary = "Devuelve la habitacion con el id seleccionado")
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
+    public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
         /*Optional<Habitacion> room = roomRepository.findById(id);
         if (room.isPresent()) {
             return new ResponseEntity<>(room.get(), HttpStatus.OK);

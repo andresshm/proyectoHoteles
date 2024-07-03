@@ -45,7 +45,27 @@ public class Habitacion {
     @JoinColumn(name = "hotelId", nullable = true) //En name no se puede poner idHotel porque da un error
     private Hotel hotel;
   
+
+
+
+
     
+    /* CONSTRUCTOR SOLO NECESARIO PARA HACER TESTS */
+    public Habitacion(String numero, String tipo, float precioNoche) {
+        this.numero = numero;
+        this.tipo = tipo;
+        this.precioNoche = precioNoche;
+    }
+
+
+    public Habitacion(long id){
+        this.id = id;
+    }
+
+
+
+
+
     public void addHost(Huesped host) {
         huespedes.add(host);
         host.setHabitacion(this);

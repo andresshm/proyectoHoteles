@@ -1,7 +1,7 @@
 package com.proyecto.hoteles.servicios;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -42,25 +42,25 @@ public class ServicioHuesped {
                 // checkin 
                 if (key.equals("fechaCheckin")) {
                     String dateString = (String) value;
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy");
-                    LocalDate fecha = null;//LocalDate.parse(dateString, formatter);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
+                    LocalDateTime fecha = null;//LocalDate.parse(dateString, formatter);
                     try {
-                        fecha = LocalDate.parse(dateString, formatter);
+                        fecha = LocalDateTime.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
-                        fecha = LocalDate.parse(dateString, formatter2);
+                        fecha = LocalDateTime.parse(dateString, formatter2);
                     }
                     optHost.get().setFechaCheckin(fecha);
 
                 } else if (key.equals("fechaCheckout")) {
                     String dateString = (String) value;
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy");
-                    LocalDate fecha = null;//LocalDate.parse(dateString, formatter);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
+                    LocalDateTime fecha = null;//LocalDate.parse(dateString, formatter);
                     try {
-                        fecha = LocalDate.parse(dateString, formatter);
+                        fecha = LocalDateTime.parse(dateString, formatter);
                     } catch (DateTimeParseException e) {
-                        fecha = LocalDate.parse(dateString, formatter2);
+                        fecha = LocalDateTime.parse(dateString, formatter2);
                     }
                     optHost.get().setFechaCheckout(fecha);
 
@@ -108,7 +108,7 @@ public class ServicioHuesped {
         }*/
     }
 
-    public List<Huesped> findByCheckIn(LocalDate checkIn) {
+    public List<Huesped> findByCheckIn(LocalDateTime checkIn) {
         
         return hostRepository.findAll().stream()
         .filter(h -> h.getFechaCheckin().equals(checkIn))
@@ -120,7 +120,7 @@ public class ServicioHuesped {
         }*/
     }
 
-    public List<Huesped> findByCheckOut(LocalDate checkOut) {
+    public List<Huesped> findByCheckOut(LocalDateTime checkOut) {
         return hostRepository.findAll().stream()
         .filter(h -> h.getFechaCheckout().equals(checkOut))
         .collect(Collectors.toList());
@@ -143,8 +143,8 @@ public class ServicioHuesped {
         List<Boolean> vaciaPorNotFound = new ArrayList<>();
         boolean p = false, q = false, r = false, s = false;
 
-        LocalDate checkInDate = null;
-        LocalDate checkOutDate = null;
+        LocalDateTime checkInDate = null;
+        LocalDateTime checkOutDate = null;
 
 
 
@@ -183,18 +183,18 @@ public class ServicioHuesped {
     }
 
 
-    private LocalDate stringToDate(String fecha) throws BussinesRuleException{
+    private LocalDateTime stringToDate(String fecha) throws BussinesRuleException{
         /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy][d-M-yyyy]");
         LocalDate f =  LocalDate.parse(fecha, formatter);
         return f;*/
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy][d-M-yyyy]");
-        LocalDate f = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy HH:mm][d-M-yyyy H:m]");
+        LocalDateTime f = null;
         try {
-            f = LocalDate.parse(fecha, formatter);
+            f = LocalDateTime.parse(fecha, formatter);
             return f;
         } catch (Exception e) {
-            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd-mm-yyyy]", HttpStatus.BAD_REQUEST);
+            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd-mm-yyyy HH:mm]", HttpStatus.BAD_REQUEST);
         }
         
     }
@@ -260,7 +260,7 @@ private void addHostToRoom(long idRoom, long idHost){
 
     public ResponseEntity<?> post(Huesped input) throws BussinesRuleException{
         
-        if (input.getFechaCheckout().isBefore(LocalDate.now())
+        if (input.getFechaCheckout().isBefore(LocalDateTime.now())
                 || input.getFechaCheckin().isAfter(input.getFechaCheckout())) {
             throw new BussinesRuleException("400", "Bad request", "Error en la peticion", HttpStatus.BAD_REQUEST);
         }

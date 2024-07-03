@@ -1,6 +1,6 @@
 package com.proyecto.hoteles.entidades;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,20 +32,42 @@ public class Huesped {
     @Schema(example = "48759851-L")
     private String dniPasaporte;
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "17-06-2024")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "17-06-2024 12:30")
     @JsonDeserialize(using = CustomLocalDateDeserializer.class)
-    private LocalDate fechaCheckin;
+    private LocalDateTime fechaCheckin;
    
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Schema(type = "string", pattern = "dd-MM-yyyy", example = "30-09-2024")//sin el type string salen cosas raras, trata el ejemplo como un string, que no da problemas
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "30-09-2024 14:00")//sin el type string salen cosas raras, trata el ejemplo como un string, que no da problemas
     @JsonDeserialize(using = CustomLocalDateDeserializer.class)
-    private LocalDate fechaCheckout;
+    private LocalDateTime fechaCheckout;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Habitacion.class)
     @JoinColumn(name = "habitacionId", nullable = true)
     private Habitacion habitacion;
 
+
+    /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
+    public Huesped(String nombre, String apellido, String dniPasaporte) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dniPasaporte = dniPasaporte;
+    }
+
+
+    public Huesped(long id){
+        this.id = id;
+    }
+
+
+    public Huesped(LocalDateTime fechaCheckin, LocalDateTime fechaCheckout) {
+        this.fechaCheckin = fechaCheckin;
+        this.fechaCheckout = fechaCheckout;
+    }
+
+
+    
+    
 }
