@@ -82,9 +82,13 @@ public class ServicioHuesped {
                     /*Este else-if es para gestionar que un huesped solo este en una habitacion
                      * y que se pueda cambiar desde el PATCH
                      */
-                    if(Long.parseLong(value.toString())!=0){
-                        optHost.get().setIdHabitacion(Long.parseLong(value.toString()));
-                        addHostToRoom(optHost.get().getIdHabitacion(), optHost.get().getId());
+                    if(Long.parseLong(value.toString())!=0){//value es el id de la habitacion
+                        if(roomRepository.existsById(Long.parseLong(value.toString()))){
+                            optHost.get().setIdHabitacion(Long.parseLong(value.toString()));
+                            addHostToRoom(optHost.get().getIdHabitacion(), optHost.get().getId());
+                        }else{
+                            System.out.println("no existe");
+                        }
                     } 
                 }else {
                     // Esto esta bien, lo de arriba es tremenda ñapa
@@ -241,7 +245,7 @@ private void addHostToRoom(long idRoom, long idHost){
             * entonces asocialo con esa habitacion
             */
             if(newHuesped.getIdHabitacion()!=0){
-                if(roomRepository.existsById(newHuesped.getIdHabitacion()))
+                if(!roomRepository.existsById(newHuesped.getIdHabitacion()))
                     throw new BussinesRuleException("404","Not Found", "Error validacion, la habitacion con id " + newHuesped.getIdHabitacion() + " no existe", HttpStatus.NOT_FOUND);
                 newHuesped.setIdHabitacion(input.getIdHabitacion());
                 newHuesped.setHabitacion(input.getHabitacion());

@@ -24,7 +24,6 @@ import com.proyecto.hoteles.servicios.ServicioHuesped;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-
 @Tag(name = "Host API", description = "Esta API sirve para gestionar los huéspedes")
 @RestController
 @RequestMapping("/huesped")
@@ -35,30 +34,64 @@ public class HostRestController {
     @Autowired
     ServicioHuesped servicio;
 
+    /**
+     * GET-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Devuelve una lista con todos los huéspedes")
     @GetMapping()
     public ResponseEntity<?> findAll() {
         return servicio.getAll();
     }
 
+    /**
+     * GET-BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Devuelve el huésped con el id seleccionado")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
         return servicio.getById(id);
     }
 
+    /**
+     * PUT
+     * 
+     * @param id
+     * @param input
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Permite actualizar un elemento completo")
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Huesped input) throws BussinesRuleException {
         return servicio.put(id, input);
     }
 
+    /**
+     * PATCH
+     * 
+     * @param id
+     * @param fields
+     * @return
+     */
     @Operation(summary = "Permite actualizar un campo concreto")
     @PatchMapping("/{id}")
     public Huesped patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return servicio.updateHostByFields(id, fields);
     }
 
+    /**
+     * POST
+     * 
+     * @param input
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Registra un huésped en la base de datos")
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody Huesped input) throws BussinesRuleException {
@@ -67,27 +100,50 @@ public class HostRestController {
         return servicio.post(input);
     }
 
+    /**
+     * DELETE-BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Elimina el huésped con el id seleccionado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
         return servicio.deleteById(id);
     }
 
+    /**
+     * DELETE-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Elimina todos los huéspedes de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
         return servicio.deleteAll();
     }
 
+    /**
+     * FILTER
+     * 
+     * @param nombre
+     * @param apellido
+     * @param documento
+     * @param checkIn
+     * @param checkOut
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Permite buscar un huésped filtrando por sus campos")
     @GetMapping("/filter")
     public List<Huesped> getByParams(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String apellido,
             @RequestParam(required = false) String documento,
-            @RequestParam(required = false) /*LocalDate*/String checkIn,
-            @RequestParam(required = false) /*LocalDate*/String checkOut) throws BussinesRuleException {
-                return servicio.filter(nombre, apellido, documento, checkIn, checkOut);
+            @RequestParam(required = false) String checkIn,
+            @RequestParam(required = false) String checkOut) throws BussinesRuleException {
+        return servicio.filter(nombre, apellido, documento, checkIn, checkOut);
     }
 
 }

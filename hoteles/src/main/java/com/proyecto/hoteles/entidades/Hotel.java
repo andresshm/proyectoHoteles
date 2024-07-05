@@ -14,6 +14,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+/*
+ * HOTEL
+ */
 @Data
 @Entity
 @Schema(name = "Hotel", description = "Representa un hotel en la base de datos")
@@ -40,14 +43,11 @@ public class Hotel {
     private List<Habitacion> habitaciones; // No puede ser una linkedlist porque en el swagger da un error 500 en el
                                            // POST
 
-
-
     /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
-    public Hotel(){
-        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    public Hotel() {
+        // Este constructor es necesario para swagger porque necesita uno por defecto
+        // sin params
     }
-
-
 
     public Hotel(String nombre, String direccion, String telefono, String email, String sitioWeb) {
         this.nombre = nombre;
@@ -57,24 +57,29 @@ public class Hotel {
         this.sitioWeb = sitioWeb;
     }
 
-
-    public Hotel(long id){
+    public Hotel(long id) {
         this.id = id;
     }
 
-
+    /* MÉTODOS */
     public void addRoom(Habitacion room) {
         habitaciones.add(room);
         room.setHotel(this);
     }
-
-
 
     public void addService(Servicio service) {
         servicios.add(service);
         List<Hotel> hoteles = service.getHoteles();
         hoteles.add(this);
         service.setHoteles(hoteles);
+    }
+
+    public void removeService(Servicio service) {
+        servicios.remove(service);
+        List<Hotel> hoteles = service.getHoteles();
+        hoteles.remove(this);
+        service.setHoteles(hoteles);
+
     }
 
 }

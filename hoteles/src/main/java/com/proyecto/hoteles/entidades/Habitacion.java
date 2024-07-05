@@ -1,6 +1,5 @@
 package com.proyecto.hoteles.entidades;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,28 +34,20 @@ public class Habitacion {
     @Schema(example = "39.99")
     private float precioNoche;
 
-    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "habitacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Huesped> huespedes;
 
-
-    @JsonIgnore //Evita recursividad
+    @JsonIgnore // Evita recursividad
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Hotel.class)
-    @JoinColumn(name = "hotelId", nullable = true) //En name no se puede poner idHotel porque da un error
+    @JoinColumn(name = "hotelId", nullable = true) // En name no se puede poner idHotel porque da un error
     private Hotel hotel;
-  
 
-
-
-
-    
     /* CONSTRUCTOR SOLO NECESARIO PARA HACER TESTS */
 
-    public Habitacion(){
-        
-        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    public Habitacion() {
+        // Este constructor es necesario para swagger porque necesita uno por defecto
+        // sin params
     }
-
 
     public Habitacion(String numero, String tipo, float precioNoche) {
         this.numero = numero;
@@ -64,15 +55,11 @@ public class Habitacion {
         this.precioNoche = precioNoche;
     }
 
-
-    public Habitacion(long id){
+    public Habitacion(long id) {
         this.id = id;
     }
 
-
-
-
-
+    /* MÉTODOS */
     public void addHost(Huesped host) {
         huespedes.add(host);
         host.setHabitacion(this);

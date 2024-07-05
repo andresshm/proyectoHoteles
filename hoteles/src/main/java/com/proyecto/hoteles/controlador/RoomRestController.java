@@ -36,63 +36,117 @@ public class RoomRestController {
     @Autowired
     ServicioHabitacion servicio;
 
+    /**
+     * GET-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Devuelve una lista con todos las habitaciones")
     @GetMapping()
     public ResponseEntity<?> findAll() {
         return servicio.getAll();
     }
 
+    /**
+     * GET-BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Devuelve la habitacion con el id seleccionado")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
         return servicio.getById(id);
     }
 
+    /**
+     * PUT
+     * 
+     * @param id
+     * @param input
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Permite actualizar un elemento completo")
     @PutMapping("/{id}")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Room updated successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
+            @ApiResponse(responseCode = "200", description = "Room updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
     })
     public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Habitacion input) throws BussinesRuleException {
         return servicio.put(id, input);
     }
 
+    /**
+     * PATCH
+     * 
+     * @param id
+     * @param fields
+     * @return
+     */
     @Operation(summary = "Permite actualizar un campo concreto")
     @PatchMapping("/{id}")
     public Habitacion patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return servicio.updateRoomByFields(id, fields);
     }
 
+    /**
+     * POST
+     * 
+     * @param input
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Registra una habitacion en la base de datos")
     @PostMapping()
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Room added successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
+            @ApiResponse(responseCode = "201", description = "Room added successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request, check number is numeric OR price is positive")
     })
     public ResponseEntity<?> post(@RequestBody Habitacion input) throws BussinesRuleException {
         return servicio.post(input);
     }
 
+    /**
+     * DELETE--BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Elimina la habitacion con el id seleccionado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
         return servicio.deleteById(id);
     }
 
+    /**
+     * DELETE-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Elimina todos las habitaciones de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
         return servicio.deleteAll();
     }
 
+    /**
+     * FILTER
+     * 
+     * @param numero
+     * @param tipo
+     * @param precio
+     * @return
+     */
     @Operation(summary = "Permite buscar una habitacion filtrando por sus campos")
     @GetMapping("/filter")
     public List<Habitacion> getByParams(
             @RequestParam(required = false) String numero,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) Float precio) {
-                return servicio.filter(numero, tipo, precio);
+        return servicio.filter(numero, tipo, precio);
     }
 
 }

@@ -15,14 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import com.proyecto.hoteles.entidades.Hotel;
+//import com.proyecto.hoteles.entidades.Hotel;
 import com.proyecto.hoteles.entidades.Servicio;
 import com.proyecto.hoteles.exception.BussinesRuleException;
-import com.proyecto.hoteles.repositorios.HotelRepository;
+//import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.ServiceRepository;
 import com.proyecto.hoteles.utils.ListsUtil;
 
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 
 @Service
 public class ServicioService {
@@ -30,8 +30,8 @@ public class ServicioService {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    @Autowired
-    private HotelRepository hotelRepository;
+    /*@Autowired
+    private HotelRepository hotelRepository;*/
 
     public Servicio updateServiceByFields(long id, Map<String, Object> fields){
 		Optional<Servicio> optService = serviceRepository.findById(id);
@@ -144,6 +144,7 @@ public class ServicioService {
     }
 
 
+    /* Unused
     @Transactional
     public void addHotelToService(long idService, long idHotel){
     Servicio service = serviceRepository.findById(idService).orElseThrow(() -> new RuntimeException("Service not found"));
@@ -152,6 +153,6 @@ public class ServicioService {
 
     service.addHotel(hotel);
     serviceRepository.save(service);
-}
+}*/
 
 }

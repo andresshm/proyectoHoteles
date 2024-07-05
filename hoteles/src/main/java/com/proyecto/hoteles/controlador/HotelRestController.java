@@ -36,113 +36,113 @@ public class HotelRestController {
     @Autowired
     ServicioHotel servicio;
 
+    /**
+     * GET-ALL
+     * 
+     * @return ResponseEntity<?>
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Devuelve una lista con todos los hoteles")
     @GetMapping()
-    public ResponseEntity<?> findAll() {
-        // return hotelRepository.findAll ();
-        /*if (!hotelRepository.findAll().isEmpty()) {
-            return new ResponseEntity<>(hotelRepository.findAll(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }*/
+    public ResponseEntity<?> findAll() throws BussinesRuleException {
         return servicio.getAll();
     }
 
+    /**
+     * GET-BY-ID
+     * 
+     * @param id
+     * @return ResponseEntity<?>
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Devuelve el hotel con el id seleccionado")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
-        /*Optional<Hotel> hotel = hotelRepository.findById(id);
-        if (hotel.isPresent()) {
-            return new ResponseEntity<>(hotel.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.getById(id);
     }
 
+    /**
+     * PUT
+     * 
+     * @param id
+     * @param input
+     * @return ResponseEntity<?>
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Permite actualizar un elemento completo")
     @PutMapping("/{id}")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Hotel updated successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
+            @ApiResponse(responseCode = "200", description = "Hotel updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
     })
     public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Hotel input) throws BussinesRuleException {
-        /*Optional<Hotel> optionalhotel = hotelRepository.findById(id);
-        if (optionalhotel.isPresent()) {
-            Hotel newhotel = optionalhotel.get();
-            if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            newhotel.setNombre(input.getNombre());
-            newhotel.setDireccion(input.getDireccion());
-            newhotel.setEmail(input.getEmail());
-            newhotel.setSitioWeb(input.getSitioWeb());
-            newhotel.setTelefono(input.getTelefono());
-            // newhotel.setHabitaciones(input.getHabitaciones());
-            Hotel save = hotelRepository.save(newhotel);
-            return new ResponseEntity<>(save, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.put(id, input);
     }
 
+    /**
+     * PATCH
+     * 
+     * @param id
+     * @param fields
+     * @return Hotel/null
+     */
     @Operation(summary = "Permite actualizar un campo concreto")
     @PatchMapping("/{id}")
     public Hotel patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return servicio.updateHotelByFields(id, fields);
     }
 
+    /**
+     * POST
+     * 
+     * @param input
+     * @return ResponseEntity<?>
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Registra un hotel en la base de datos")
     @PostMapping()
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Hotel added successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
+            @ApiResponse(responseCode = "201", description = "Hotel added successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request, check phone is numeric")
     })
     public ResponseEntity<?> post(@RequestBody Hotel input) throws BussinesRuleException {
-        /*if(!input.getTelefono().matches("^\\d+( \\d+)*$")){//lo suyo seria poner que hasta 9 nums
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        input.getHabitaciones().forEach(x -> x.setHotel(input));
-        input.getHabitaciones().forEach(x -> x.getHuespedes().forEach(z -> z.setHabitacion(x)));
-
-        input.getServicios().forEach(x -> {
-            List<Hotel> hoteles = new ArrayList<>();
-            hoteles.add(input);
-            x.setHoteles(hoteles);
-
-        });
-        Hotel save = hotelRepository.save(input);
-        return ResponseEntity.ok(save);*/
         return servicio.post(input);
     }
 
+    /**
+     * DELETE-BY-ID
+     * 
+     * @param id
+     * @return ResponseEntity<?>
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Elimina el hotel con el id seleccionado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
-        /*
-         * hotelRepository.deleteById(id);
-         * return new ResponseEntity<>(HttpStatus.OK);
-         */
-        /*Optional<Hotel> hotel = hotelRepository.findById(id);
-        if (hotel.isPresent()) {
-            hotelRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.deleteById(id);
     }
 
+    /**
+     * DELETE-ALL
+     * 
+     * @return ResponseEntity<?>
+     */
     @Operation(summary = "Elimina todos los hoteles de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
-        /*hotelRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);*/
         return servicio.deleteAll();
     }
 
+    /**
+     * FILTER
+     * 
+     * @param nombre
+     * @param direccion
+     * @param telefono
+     * @param email
+     * @param web
+     * @return Lista de hoteles que cumplen las condiciones
+     */
     @Operation(summary = "Permite buscar un hotel filtrando por sus campos")
     @GetMapping("/filter")
     public List<Hotel> getByParams(
@@ -151,8 +151,7 @@ public class HotelRestController {
             @RequestParam(required = false) String telefono,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String web) {
-                return servicio.filter(nombre, direccion, telefono, email, web);        
+        return servicio.filter(nombre, direccion, telefono, email, web);
     }
-
 
 }

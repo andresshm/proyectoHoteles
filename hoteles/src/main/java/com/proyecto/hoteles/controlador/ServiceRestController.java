@@ -1,6 +1,5 @@
 package com.proyecto.hoteles.controlador;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -35,110 +34,107 @@ public class ServiceRestController {
     @Autowired
     ServicioService servicio;
 
+    /**
+     * GET-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Devuelve una lista con todos los servicios")
     @GetMapping()
     public ResponseEntity<?> findAll() {
-        // return serviceRepository.findAll();
-        /*if (!serviceRepository.findAll().isEmpty()) {
-            return new ResponseEntity<>(serviceRepository.findAll(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }*/
         return servicio.getAll();
 
     }
 
+    /**
+     * GET-BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Devuelve el servicio con el id seleccionado")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id) throws BussinesRuleException {
-        /*Optional<Servicio> service = serviceRepository.findById(id);
-        if (service.isPresent()) {
-            return new ResponseEntity<>(service.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.getById(id);
     }
 
+    /**
+     * PUT
+     * 
+     * @param id
+     * @param input
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Permite actualizar un elemento completo")
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable Long id, @RequestBody Servicio input) throws BussinesRuleException {
-        /*Optional<Servicio> optionalService = serviceRepository.findById(id);
-        if (optionalService.isPresent()) {
-            Servicio newService = optionalService.get();
-            newService.setNombre(input.getNombre());
-            newService.setDescripcion(input.getDescripcion());
-            Servicio save = serviceRepository.save(newService);
-            return new ResponseEntity<>(save, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.put(id, input);
     }
 
+    /**
+     * PATCH
+     * 
+     * @param id
+     * @param fields
+     * @return
+     */
     @Operation(summary = "Permite actualizar un campo concreto")
     @PatchMapping("/{id}")
     public Servicio patch(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return servicio.updateServiceByFields(id, fields);
     }
 
+    /**
+     * POST
+     * 
+     * @param input
+     * @return
+     */
     @Operation(summary = "Registra un servicio en la base de datos")
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody Servicio input) {
-        /*Servicio save = serviceRepository.save(input);
-        return ResponseEntity.ok(save);*/
         return servicio.post(input);
     }
 
+    /**
+     * DELETE-BY-ID
+     * 
+     * @param id
+     * @return
+     * @throws BussinesRuleException
+     */
     @Operation(summary = "Elimina el servicio con el id seleccionado")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws BussinesRuleException {
-        /*Optional<Servicio> service = serviceRepository.findById(id);
-        if (service.isPresent()) {
-            serviceRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }*/
         return servicio.deleteById(id);
 
     }
 
+    /**
+     * DELETE-ALL
+     * 
+     * @return
+     */
     @Operation(summary = "Elimina todos los servicios de la base de datos")
     @DeleteMapping("/full")
     public ResponseEntity<?> deleteAll() {
-        /*serviceRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);*/
         return servicio.deleteAll();
     }
 
+    /**
+     * FILTER
+     * 
+     * @param nombre
+     * @param descripcion
+     * @return
+     */
     @Operation(summary = "Permite buscar un servicio filtrando por sus campos")
     @GetMapping("/filter")
     public List<Servicio> getByParams(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String descripcion) {
-                return servicio.filter(nombre, descripcion);
-        /*List<Servicio> hostsByName = servicio.findByName(nombre);
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false;
-
-        Set<Servicio> hostsFound = new HashSet<>();
-        if (p = nombre != null) {
-            hostsFound.addAll(hostsByName);
-            vaciaPorNotFound.add(p);
-        }
-
-        if (descripcion != null) {
-            List<Servicio> hostsByDescription = servicio.findByDescription(descripcion);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDescription, vaciaPorNotFound);
-        }
-
-        return new ArrayList<>(hostsFound);*/
+        return servicio.filter(nombre, descripcion);
     }
-
-    /*@Operation(summary = "Permite añadir hoteles como clientes del servicio")
-    @PostMapping("/{serviceId}/hotels/{hotelId}")
-    public void addHotelToService(@PathVariable Long serviceId, @PathVariable Long hotelId) {
-        servicio.addHotelToService(serviceId, hotelId);
-    }*/
 }

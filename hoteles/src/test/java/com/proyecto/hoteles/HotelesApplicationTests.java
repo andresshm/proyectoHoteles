@@ -60,7 +60,7 @@ class HotelesApplicationTests {
 
 	/*GET ALL */
 	@Test
-	public void getAllTest(){
+	public void getAllTest() throws BussinesRuleException{
 		/* SERVICIO */
 		List<Servicio> entities = new ArrayList<>();
         entities.add(new Servicio("catering", "comida"));

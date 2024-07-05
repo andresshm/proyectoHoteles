@@ -17,6 +17,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+/*
+ * Huésped
+ */
 @Data
 @Entity
 @Schema(name = "Huesped", description = "Representa un huesped en la base de datos")
@@ -31,15 +34,17 @@ public class Huesped {
     private String apellido;
     @Schema(example = "48759851-L")
     private String dniPasaporte;
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "17-06-2024 12:30")
     @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDateTime fechaCheckin;
-   
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
-    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "30-09-2024 14:00")//sin el type string salen cosas raras, trata el ejemplo como un string, que no da problemas
+    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "30-09-2024 14:00") // sin el type string salen
+                                                                                         // cosas raras. Así trata el
+                                                                                         // ejemplo como un string, que
+                                                                                         // no da problemas
     @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDateTime fechaCheckout;
 
@@ -48,12 +53,11 @@ public class Huesped {
     @JoinColumn(name = "habitacionId", nullable = true)
     private Habitacion habitacion;
 
-
     /* CONSTRUCTOR NECESARIO SOLO PARA HACER TEST */
 
-    public Huesped(){
-        
-        //Este constructor es necesario para swagger porque necesita uno por defecto sin params
+    public Huesped() {
+        // Este constructor es necesario para swagger porque necesita uno por defecto
+        // sin params
     }
 
     public Huesped(String nombre, String apellido, String dniPasaporte) {
@@ -62,18 +66,13 @@ public class Huesped {
         this.dniPasaporte = dniPasaporte;
     }
 
-
-    public Huesped(long id){
+    public Huesped(long id) {
         this.id = id;
     }
-
 
     public Huesped(LocalDateTime fechaCheckin, LocalDateTime fechaCheckout) {
         this.fechaCheckin = fechaCheckin;
         this.fechaCheckout = fechaCheckout;
     }
 
-
-    
-    
 }
