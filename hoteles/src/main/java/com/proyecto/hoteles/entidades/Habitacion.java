@@ -23,7 +23,7 @@ import lombok.Data;
 @Entity
 @Schema(name = "Habitacion", description = "Representa una habitacion en la base de datos")
 public class Habitacion {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
     private long idHotel;

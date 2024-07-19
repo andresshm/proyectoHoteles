@@ -21,7 +21,7 @@ import lombok.Data;
 @Entity
 @Schema(name = "Hotel", description = "Representa un hotel en la base de datos")
 public class Hotel {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
     private List<Long> services = new ArrayList<>();

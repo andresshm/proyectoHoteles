@@ -24,7 +24,7 @@ import lombok.Data;
 @Entity
 @Schema(name = "Huesped", description = "Representa un huesped en la base de datos")
 public class Huesped {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
     private long idHabitacion;

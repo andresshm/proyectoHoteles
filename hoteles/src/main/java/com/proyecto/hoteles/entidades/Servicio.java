@@ -24,7 +24,7 @@ import lombok.Data;
 @Entity
 @Schema(name = "Servicio", description = "Representa un servicio en la base de datos")
 public class Servicio {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
     @Schema(example = "Catering")
