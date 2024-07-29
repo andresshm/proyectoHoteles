@@ -34,14 +34,16 @@ public class Huesped {
     private String apellido;
     @Schema(example = "48759851-L")
     private String dniPasaporte;
+    @Schema(example = "Murcia")
+    private String procedencia;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
-    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "17-06-2024 12:30")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
+    @Schema(type = "string", pattern = "dd/MM/yyyy HH:mm", example = "17/06/2024 12:30")
     @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDateTime fechaCheckin;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
-    @Schema(type = "string", pattern = "dd-MM-yyyy HH:mm", example = "30-09-2024 14:00") // sin el type string salen
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
+    @Schema(type = "string", pattern = "dd/MM/yyyy HH:mm", example = "30/09/2024 14:00") // sin el type string salen
                                                                                          // cosas raras. Así trata el
                                                                                          // ejemplo como un string, que
                                                                                          // no da problemas

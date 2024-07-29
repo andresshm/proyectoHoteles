@@ -13,8 +13,8 @@ import java.time.format.DateTimeParseException;
 
 public class CustomLocalDateDeserializer extends JsonDeserializer<LocalDateTime> {
 
-    private static final DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
-    private static final DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    private static final DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
+    private static final DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) 

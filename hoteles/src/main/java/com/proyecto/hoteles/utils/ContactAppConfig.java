@@ -12,8 +12,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 @Configuration
 public class ContactAppConfig {
 
-    private static final String dateFormat = "dd-MM-yyyy HH:mm"; //"yyyy-MM-dd";
-    private static final String dateTimeFormat = "dd-MM-yyyy HH:mm"; //"yyyy-MM-dd HH:mm";
+    private static final String dateFormat = "dd/MM/yyyy HH:mm"; //"yyyy-MM-dd";
+    private static final String dateTimeFormat = "dd/MM/yyyy HH:mm"; //"yyyy-MM-dd HH:mm";
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {

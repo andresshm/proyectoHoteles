@@ -42,8 +42,8 @@ public class ServicioHuesped {
                 /*Estos dos if se encargan de parsear las fechas */
                 if (key.equals("fechaCheckin")) {
                     String dateString = (String) value;
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
                     LocalDateTime fecha = null;
                     try {
                         fecha = LocalDateTime.parse(dateString, formatter);
@@ -54,8 +54,8 @@ public class ServicioHuesped {
 
                 } else if (key.equals("fechaCheckout")) {
                     String dateString = (String) value;
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d-M-yyyy H:m");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
                     LocalDateTime fecha = null;
                     try {
                         fecha = LocalDateTime.parse(dateString, formatter);
@@ -122,6 +122,12 @@ public class ServicioHuesped {
                 .collect(Collectors.toList());
     }
 
+    public List<Huesped> findByOrigin(String procedencia) {
+        return hostRepository.findAll().stream()
+                .filter(h -> h.getProcedencia().equalsIgnoreCase(procedencia))
+                .collect(Collectors.toList());
+    }
+
     public List<Huesped> findByCheckIn(LocalDateTime checkIn) {
         
         return hostRepository.findAll().stream()
@@ -137,15 +143,16 @@ public class ServicioHuesped {
 
 
 //llevar al final este y los de arriba
-    public List<Huesped> filter(String nombre, String apellido, String documento, String checkIn, String checkOut) throws BussinesRuleException{
+    public List<Huesped> filter(String nombre, String apellido, String documento, String procedencia, String checkIn, String checkOut) throws BussinesRuleException{
         List<Huesped> hostsByName = new ArrayList<>();
         List<Huesped> hostsBySurname = new ArrayList<>();
         List<Huesped> hostsByDocument = new ArrayList<>();
+        List<Huesped> hostsByOrigin = new ArrayList<>();
         List<Huesped> hostsByCheckin = new ArrayList<>();
         List<Huesped> hostsByCheckout = new ArrayList<>();
         Set<Huesped> hostsFound = new HashSet<>();
         List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false, q = false, r = false, s = false;
+        boolean p = false, q = false, r = false, s = false, t = false;
 
         LocalDateTime checkInDate = null;
         LocalDateTime checkOutDate = null;
@@ -169,6 +176,12 @@ public class ServicioHuesped {
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDocument, vaciaPorNotFound);
             vaciaPorNotFound.add(r);
         }
+        
+        if (t = procedencia != null) {
+            hostsByOrigin = findByOrigin(procedencia);
+            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByOrigin, vaciaPorNotFound);
+            vaciaPorNotFound.add(t);
+        }
 
         if (s = checkIn != null) {
             checkInDate = stringToDate(checkIn);
@@ -188,13 +201,13 @@ public class ServicioHuesped {
 
 
     private LocalDateTime stringToDate(String fecha) throws BussinesRuleException{
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy HH:mm][d-M-yyyy H:m]");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yyyy HH:mm][d/M/yyyy H:m]");
         LocalDateTime f = null;
         try {
             f = LocalDateTime.parse(fecha, formatter);
             return f;
         } catch (Exception e) {
-            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd-mm-yyyy HH:mm]", HttpStatus.BAD_REQUEST);
+            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd/mm/yyyy HH:mm]", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -237,6 +250,7 @@ private void addHostToRoom(long idRoom, long idHost){
             newHuesped.setNombre(input.getNombre());
             newHuesped.setApellido(input.getApellido());
             newHuesped.setDniPasaporte(input.getDniPasaporte());
+            newHuesped.setProcedencia(input.getProcedencia());
             newHuesped.setFechaCheckin(input.getFechaCheckin());
             newHuesped.setFechaCheckout(input.getFechaCheckout());
             newHuesped.setIdHabitacion(input.getIdHabitacion());
