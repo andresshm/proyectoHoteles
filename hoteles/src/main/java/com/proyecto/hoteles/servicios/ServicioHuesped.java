@@ -128,22 +128,22 @@ public class ServicioHuesped {
                 .collect(Collectors.toList());
     }
 
-    public List<Huesped> findByCheckIn(LocalDateTime checkIn) {
+    public List<Huesped> findByCheckIn(LocalDateTime checkInD, LocalDateTime checkInH) {
         
         return hostRepository.findAll().stream()
-        .filter(h -> h.getFechaCheckin().equals(checkIn))
+        .filter(h -> h.getFechaCheckin().isAfter(checkInD) && h.getFechaCheckin().isBefore(checkInH))
         .collect(Collectors.toList());
     }
 
-    public List<Huesped> findByCheckOut(LocalDateTime checkOut) {
+    public List<Huesped> findByCheckOut(LocalDateTime checkOutD, LocalDateTime checkOutH) {
         return hostRepository.findAll().stream()
-        .filter(h -> h.getFechaCheckout().equals(checkOut))
+        .filter(h -> h.getFechaCheckout().isAfter(checkOutD) && h.getFechaCheckout().isBefore(checkOutH))
         .collect(Collectors.toList());
     }
 
 
 //llevar al final este y los de arriba
-    public List<Huesped> filter(String nombre, String apellido, String documento, String procedencia, String checkIn, String checkOut) throws BussinesRuleException{
+    public List<Huesped> filter(String nombre, String apellido, String documento, String procedencia, String checkInD, String checkInH, String checkOutD, String checkOutH) throws BussinesRuleException{
         List<Huesped> hostsByName = new ArrayList<>();
         List<Huesped> hostsBySurname = new ArrayList<>();
         List<Huesped> hostsByDocument = new ArrayList<>();
@@ -154,8 +154,10 @@ public class ServicioHuesped {
         List<Boolean> vaciaPorNotFound = new ArrayList<>();
         boolean p = false, q = false, r = false, s = false, t = false;
 
-        LocalDateTime checkInDate = null;
-        LocalDateTime checkOutDate = null;
+        LocalDateTime checkInDateD = null;
+        LocalDateTime checkInDateH = null;
+        LocalDateTime checkOutDateD = null;
+        LocalDateTime checkOutDateH = null;
 
 
 
@@ -183,16 +185,18 @@ public class ServicioHuesped {
             vaciaPorNotFound.add(t);
         }
 
-        if (s = checkIn != null) {
-            checkInDate = stringToDate(checkIn);
-            hostsByCheckin = findByCheckIn(checkInDate);
+        if (s = (checkInD != null && checkInH != null)) {
+            checkInDateD = stringToDate(checkInD);
+            checkInDateH = stringToDate(checkInH);
+            hostsByCheckin = findByCheckIn(checkInDateD, checkInDateH);
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckin, vaciaPorNotFound);
             vaciaPorNotFound.add(s);
         }
 
-        if (checkOut != null) {
-            checkOutDate = stringToDate(checkOut);
-            hostsByCheckout = findByCheckOut(checkOutDate);
+        if (checkOutD != null && checkOutH != null) {
+            checkOutDateD = stringToDate(checkOutD);
+            checkOutDateH = stringToDate(checkOutH);
+            hostsByCheckout = findByCheckOut(checkOutDateD, checkOutDateH);
             ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout, vaciaPorNotFound);
         }
 

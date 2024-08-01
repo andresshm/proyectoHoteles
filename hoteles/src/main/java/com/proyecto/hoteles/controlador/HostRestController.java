@@ -146,9 +146,11 @@ public class HostRestController {
             @RequestParam(required = false) String apellido,
             @RequestParam(required = false) String documento,
             @RequestParam(required = false) String procedencia,
-            @RequestParam(required = false) String checkIn,
-            @RequestParam(required = false) String checkOut) throws BussinesRuleException {
-        return servicio.filter(nombre, apellido, documento, procedencia, checkIn, checkOut);
+            @RequestParam(required = false) String checkInD,
+            @RequestParam(required = false) String checkInH,
+            @RequestParam(required = false) String checkOutD,
+            @RequestParam(required = false) String checkOutH) throws BussinesRuleException {
+        return servicio.filter(nombre, apellido, documento, procedencia, checkInD,checkInH,checkOutD, checkOutH);
     }
 
 }
