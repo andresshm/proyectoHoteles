@@ -11,11 +11,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import com.proyecto.hoteles.entidades.Filtro;
 import com.proyecto.hoteles.entidades.Habitacion;
 import com.proyecto.hoteles.entidades.Hotel;
 import com.proyecto.hoteles.entidades.Servicio;
@@ -26,6 +28,7 @@ import com.proyecto.hoteles.repositorios.RoomRepository;
 import com.proyecto.hoteles.repositorios.ServiceRepository;
 import com.proyecto.hoteles.utils.ListsUtil;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -333,5 +336,64 @@ public class ServicioHotel {
                 .filter(h -> h.getSitioWeb().equalsIgnoreCase(web))
                 .collect(Collectors.toList());
     }
+
+
+
+
+
+       public static Specification<Hotel> getSongsByFilters(List<Filtro.SearchCriteria> searchCriteriaList) {
+        return (root, query, criteriaBuilder) -> {
+            
+            Predicate[] predicates = searchCriteriaList.stream()
+                    .map(searchCriteria -> {
+                        switch (searchCriteria.getOperation()) {
+                            case EQUALS -> {
+                            return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            case CONTAINS -> {
+                                return criteriaBuilder.like(root.get(searchCriteria.getKey()), "%" + searchCriteria.getValue() + "%");
+                    }
+                            case GREATER_THAN -> {
+                                return criteriaBuilder.greaterThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            case LESS_THAN -> {
+                                return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            default -> throw new UnsupportedOperationException("Operation not supported");
+                        }
+                    })
+                    .toArray(Predicate[]::new);
+            return criteriaBuilder.and(predicates);
+        };
+    }
+
+    public static Specification<Hotel> hasName(String nombre) {
+        return (root, query, criteriaBuilder) -> 
+        nombre == null ? null : criteriaBuilder.like(root.get("nombre"), "%" + nombre + "%");
+    }
+
+    public static Specification<Hotel> hasSurname(String direccion) {
+        return (root, query, criteriaBuilder) -> 
+            direccion == null ? null : criteriaBuilder.equal(root.get("direccion"), direccion);
+    }
+
+    public static Specification<Hotel> hasDni(String telefono) {
+        return (root, query, criteriaBuilder) -> 
+            telefono == null ? null : criteriaBuilder.equal(root.get("telefono"), telefono);
+    }
+
+    public static Specification<Hotel> hasProcedence(String email) {
+        return (root, query, criteriaBuilder) -> 
+        email == null ? null : criteriaBuilder.equal(root.get("email"), email);
+    }
+    
+    public static Specification<Hotel> hasCheckin(String sitioWeb) {
+        return (root, query, criteriaBuilder) -> 
+        sitioWeb == null ? null : criteriaBuilder.equal(root.get("sitioWeb"), sitioWeb);
+    }
+    
+
+
+
 
 }

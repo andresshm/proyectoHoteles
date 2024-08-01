@@ -10,17 +10,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import com.proyecto.hoteles.entidades.Filtro;
 //import com.proyecto.hoteles.entidades.Hotel;
 import com.proyecto.hoteles.entidades.Servicio;
 import com.proyecto.hoteles.exception.BussinesRuleException;
 //import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.ServiceRepository;
 import com.proyecto.hoteles.utils.ListsUtil;
+
+import jakarta.persistence.criteria.Predicate;
 
 //import jakarta.transaction.Transactional;
 
@@ -144,15 +148,57 @@ public class ServicioService {
     }
 
 
-    /* Unused
-    @Transactional
-    public void addHotelToService(long idService, long idHotel){
-    Servicio service = serviceRepository.findById(idService).orElseThrow(() -> new RuntimeException("Service not found"));
-    Hotel hotel = hotelRepository.findById(idHotel).orElseThrow(() -> new RuntimeException("Hotel not found"));
-    
+    public static Specification<Servicio> getSongsByFilters(List<Filtro.SearchCriteria> searchCriteriaList) {
+        return (root, query, criteriaBuilder) -> {
+            
+            Predicate[] predicates = searchCriteriaList.stream()
+                    .map(searchCriteria -> {
+                        switch (searchCriteria.getOperation()) {
+                            case EQUALS -> {
+                            // if ("nombre".equals(searchCriteria.getKey())) {
+                            //     Join<Servicio, Album> albumJoin = root.join("album", JoinType.INNER);
+                            //     return criteriaBuilder.equal(albumJoin.get("id"), Long.valueOf(searchCriteria.getValue()));
+                            // } else {
+                            //     return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                            // }
+                            return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
 
-    service.addHotel(hotel);
-    serviceRepository.save(service);
-}*/
+                    }
+                            case CONTAINS -> {
+                                return criteriaBuilder.like(root.get(searchCriteria.getKey()), "%" + searchCriteria.getValue() + "%");
+                    }
+                            case GREATER_THAN -> {
+                                return criteriaBuilder.greaterThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            case LESS_THAN -> {
+                                return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            default -> throw new UnsupportedOperationException("Operation not supported");
+                        }
+                    })
+                    .toArray(Predicate[]::new);
+            return criteriaBuilder.and(predicates);
+        };
+    }
+
+    public static Specification<Servicio> hasName(String nombre) {
+        return (root, query, criteriaBuilder) -> 
+        nombre == null ? null : criteriaBuilder.like(root.get("nombre"), "%" + nombre + "%");
+    }
+
+    public static Specification<Servicio> hasDesc(String desc) {
+        return (root, query, criteriaBuilder) -> 
+            desc == null ? null : criteriaBuilder.equal(root.get("desc"), desc);
+    }
+
+    // public static Specification<Servicio> hasUrl(String url) {
+    //     return (root, query, criteriaBuilder) -> 
+    //         url == null ? null : criteriaBuilder.equal(root.get("url"), url);
+    // }
+
+    // public static Specification<Servicio> hasAlbum(Integer albumId) {
+    //     return (root, query, criteriaBuilder) -> 
+    //         albumId == null ? null : criteriaBuilder.equal(root.get("album").get("id"), albumId);
+    // }
 
 }

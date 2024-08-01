@@ -10,11 +10,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import com.proyecto.hoteles.entidades.Filtro;
 import com.proyecto.hoteles.entidades.Habitacion;
 import com.proyecto.hoteles.entidades.Hotel;
 import com.proyecto.hoteles.entidades.Huesped;
@@ -24,6 +26,7 @@ import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.RoomRepository;
 import com.proyecto.hoteles.utils.ListsUtil;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -252,6 +255,57 @@ public class ServicioHabitacion {
         return roomRepository.findAll().stream()
                 .filter(h -> h.getPrecioNoche() == price)
                 .collect(Collectors.toList());
+    }
+
+
+
+
+     public static Specification<Habitacion> getSongsByFilters(List<Filtro.SearchCriteria> searchCriteriaList) {
+        return (root, query, criteriaBuilder) -> {
+            
+            Predicate[] predicates = searchCriteriaList.stream()
+                    .map(searchCriteria -> {
+                        switch (searchCriteria.getOperation()) {
+                            case EQUALS -> {
+                            // if ("nombre".equals(searchCriteria.getKey())) {
+                            //     Join<Servicio, Album> albumJoin = root.join("album", JoinType.INNER);
+                            //     return criteriaBuilder.equal(albumJoin.get("id"), Long.valueOf(searchCriteria.getValue()));
+                            // } else {
+                            //     return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                            // }
+                            return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+
+                    }
+                            case CONTAINS -> {
+                                return criteriaBuilder.like(root.get(searchCriteria.getKey()), "%" + searchCriteria.getValue() + "%");
+                    }
+                            case GREATER_THAN -> {
+                                return criteriaBuilder.greaterThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            case LESS_THAN -> {
+                                return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
+                    }
+                            default -> throw new UnsupportedOperationException("Operation not supported");
+                        }
+                    })
+                    .toArray(Predicate[]::new);
+            return criteriaBuilder.and(predicates);
+        };
+    }
+
+    public static Specification<Habitacion> hasNumber(String numero) {
+        return (root, query, criteriaBuilder) -> 
+        numero == null ? null : criteriaBuilder.like(root.get("numero"), "%" + numero + "%");
+    }
+
+    public static Specification<Habitacion> hasType(String tipo) {
+        return (root, query, criteriaBuilder) -> 
+            tipo == null ? null : criteriaBuilder.equal(root.get("tipo"), tipo);
+    }
+
+    public static Specification<Habitacion> hasDni(Float precio) {
+        return (root, query, criteriaBuilder) -> 
+            precio == null ? null : criteriaBuilder.equal(root.get("precioNoche"), precio);
     }
 
 }
