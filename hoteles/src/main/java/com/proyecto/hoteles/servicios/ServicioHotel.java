@@ -20,6 +20,7 @@ import org.springframework.util.ReflectionUtils;
 import com.proyecto.hoteles.entidades.Filtro;
 import com.proyecto.hoteles.entidades.Habitacion;
 import com.proyecto.hoteles.entidades.Hotel;
+import com.proyecto.hoteles.entidades.HuespedesPorHotel;
 import com.proyecto.hoteles.entidades.Servicio;
 import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HostRepository;
@@ -210,6 +211,29 @@ public class ServicioHotel {
         hotelRepository.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+    /*HOTEL-Nº HUESPEDES */
+    public List<HuespedesPorHotel> getNumHosts() throws BussinesRuleException{
+        int cont=0;
+        List<Hotel> hoteles = hotelRepository.findAll();
+        List<HuespedesPorHotel> hphs = new ArrayList<>();
+        
+        for(Hotel hotel : hoteles){
+            for(Habitacion h : hotel.getHabitaciones()){
+                cont += h.getHuespedes().size();
+            }
+            hphs.add(new HuespedesPorHotel(hotel.getNombre(), cont));
+            cont=0;
+        }
+        return hphs;
+        // return new HuespedesPorHotel(hotel.getNombre(), cont);
+
+    }
+
+
+
 
     @Transactional
     private void addRoomToHotel(long idHotel, long idRoom) throws BussinesRuleException {

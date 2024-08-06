@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Filtro;
 import com.proyecto.hoteles.entidades.Hotel;
+import com.proyecto.hoteles.entidades.HuespedesPorHotel;
 import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.servicios.ServicioHotel;
@@ -141,6 +142,13 @@ public class HotelRestController {
     public ResponseEntity<?> deleteAll() {
         return servicio.deleteAll();
     }
+
+
+    @GetMapping("/total")
+    public List<HuespedesPorHotel> getNumHosts() throws BussinesRuleException {
+        return servicio.getNumHosts();
+    }
+    
 
     /**
      * FILTER

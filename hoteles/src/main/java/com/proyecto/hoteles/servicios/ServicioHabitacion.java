@@ -267,14 +267,7 @@ public class ServicioHabitacion {
                     .map(searchCriteria -> {
                         switch (searchCriteria.getOperation()) {
                             case EQUALS -> {
-                            // if ("nombre".equals(searchCriteria.getKey())) {
-                            //     Join<Servicio, Album> albumJoin = root.join("album", JoinType.INNER);
-                            //     return criteriaBuilder.equal(albumJoin.get("id"), Long.valueOf(searchCriteria.getValue()));
-                            // } else {
-                            //     return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
-                            // }
                             return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
-
                     }
                             case CONTAINS -> {
                                 return criteriaBuilder.like(root.get(searchCriteria.getKey()), "%" + searchCriteria.getValue() + "%");
@@ -285,6 +278,7 @@ public class ServicioHabitacion {
                             case LESS_THAN -> {
                                 return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
                     }
+                            
                             default -> throw new UnsupportedOperationException("Operation not supported");
                         }
                     })

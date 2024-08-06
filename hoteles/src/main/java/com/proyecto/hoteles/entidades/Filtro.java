@@ -37,7 +37,7 @@ public class Filtro {
         EQUALS,
         CONTAINS,
         GREATER_THAN,
-        LESS_THAN
+        LESS_THAN,
     }
 
     @Data

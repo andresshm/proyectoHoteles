@@ -347,6 +347,7 @@ private void addHostToRoom(long idRoom, long idHost){
                             case LESS_THAN -> {
                                 return criteriaBuilder.lessThan(root.get(searchCriteria.getKey()), searchCriteria.getValue());
                     }
+
                             default -> throw new UnsupportedOperationException("Operation not supported");
                         }
                     })
@@ -375,9 +376,9 @@ private void addHostToRoom(long idRoom, long idHost){
         procedencia == null ? null : criteriaBuilder.equal(root.get("procedencia"), procedencia);
     }
     
-    public static Specification<Huesped> hasCheckin(String fechaCheckin) {
+    public static Specification<Huesped> hasCheckin(String fechaCheckinD) {
         return (root, query, criteriaBuilder) -> 
-        fechaCheckin == null ? null : criteriaBuilder.equal(root.get("fechaCheckin"), fechaCheckin);
+        fechaCheckinD == null ? null : criteriaBuilder.equal(root.get("fechaCheckin"), fechaCheckinD);
     }
     
     public static Specification<Huesped> hasCheckout(String fechaCheckout) {
