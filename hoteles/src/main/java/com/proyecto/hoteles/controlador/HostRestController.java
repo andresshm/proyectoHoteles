@@ -105,8 +105,6 @@ public class HostRestController {
     @Operation(summary = "Registra un huésped en la base de datos")
     @PostMapping()
     public ResponseEntity<?> post(@RequestBody Huesped input) throws BussinesRuleException {
-        // un huesped no puede salir antes de haberse registrado ni puede salir antes de
-        // haber entrado
         return servicio.post(input);
     }
 
