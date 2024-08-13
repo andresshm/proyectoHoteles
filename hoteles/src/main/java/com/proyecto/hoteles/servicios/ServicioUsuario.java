@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.hoteles.entidades.Usuario;
-import com.proyecto.hoteles.repositorios.UserRepository;
+import com.proyecto.hoteles.repositorios.UsuariosRepository;
 
 @Service
 public class ServicioUsuario {
 
     @Autowired
-    private UserRepository userRepository;
+    private UsuariosRepository userRepository;
 
     public List<Usuario> getAllUsers(){
         return userRepository.findAll();
