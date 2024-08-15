@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Host API", description = "Esta API sirve para gestionar los huéspedes")
 @RestController
-@CrossOrigin(origins = "*"/*"http://localhost:4200" */)
+@CrossOrigin(origins = "http://localhost:4200"/*"http://localhost:4200" */)
 @RequestMapping("/huesped")
 public class HostRestController {
     @Autowired

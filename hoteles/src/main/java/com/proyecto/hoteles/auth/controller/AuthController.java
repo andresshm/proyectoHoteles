@@ -11,6 +11,7 @@ import com.proyecto.hoteles.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"*"})
 public class AuthController {
 
     private final AuthService authService;
@@ -35,16 +37,6 @@ public class AuthController {
 
     }
 
-    // @PostMapping("/login")
-    // public String login(){
-    //     return "tu puta madre";
-
-    // }
-    
-    
-    // @PostMapping("/register")
-    // public String register(){
-    //     return "tu puta madre";
-
-    // }
+     
+   
 }
