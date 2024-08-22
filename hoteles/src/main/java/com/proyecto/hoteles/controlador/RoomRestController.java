@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Filtro;
@@ -142,21 +142,21 @@ public class RoomRestController {
     }
 
     /**
-     * FILTER
+     * FILTER (unused)
      * 
      * @param numero
      * @param tipo
      * @param precio
      * @return
      */
-    @Operation(summary = "Permite buscar una habitacion filtrando por sus campos")
-    @GetMapping("/filter")
-    public List<Habitacion> getByParams(
-            @RequestParam(required = false) String numero,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) Float precio) {
-        return servicio.filter(numero, tipo, precio);
-    }
+    // @Operation(summary = "Permite buscar una habitacion filtrando por sus campos")
+    // @GetMapping("/filter")
+    // public List<Habitacion> getByParams(
+    //         @RequestParam(required = false) String numero,
+    //         @RequestParam(required = false) String tipo,
+    //         @RequestParam(required = false) Float precio) {
+    //     return servicio.filter(numero, tipo, precio);
+    // }
 
 
 

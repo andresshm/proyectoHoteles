@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Filtro;
@@ -133,19 +133,19 @@ public class ServiceRestController {
     }
 
     /**
-     * FILTER
+     * FILTER (unused)
      * 
      * @param nombre
      * @param descripcion
      * @return
      */
-    @Operation(summary = "Permite buscar un servicio filtrando por sus campos")
-    @GetMapping("/filter")
-    public List<Servicio> getByParams(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String descripcion) {
-        return servicio.filter(nombre, descripcion);
-    }
+    // @Operation(summary = "Permite buscar un servicio filtrando por sus campos")
+    // @GetMapping("/filter")
+    // public List<Servicio> getByParams(
+    //         @RequestParam(required = false) String nombre,
+    //         @RequestParam(required = false) String descripcion) {
+    //     return servicio.filter(nombre, descripcion);
+    // }
 
 
 

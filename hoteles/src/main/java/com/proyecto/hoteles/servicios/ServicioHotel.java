@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+// import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import com.proyecto.hoteles.repositorios.HostRepository;
 import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.RoomRepository;
 import com.proyecto.hoteles.repositorios.ServiceRepository;
-import com.proyecto.hoteles.utils.ListsUtil;
+// import com.proyecto.hoteles.utils.ListsUtil;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
@@ -290,76 +290,76 @@ public class ServicioHotel {
 
     }
 
-    public List<Hotel> filter(String nombre, String direccion, String telefono, String email, String web) {
-        List<Hotel> hostsByName = new ArrayList<>();
-        List<Hotel> hostsByAddress = new ArrayList<>();
-        List<Hotel> hostsByPhone = new ArrayList<>();
-        List<Hotel> hostsByMail = new ArrayList<>();
-        List<Hotel> hostsByWebsite = new ArrayList<>();
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false, q = false, r = false, s = false;
-        Set<Hotel> hostsFound = new HashSet<>();
-        if (p = nombre != null) {
-            hostsByName = findByName(nombre);
-            hostsFound.addAll(hostsByName);
-            vaciaPorNotFound.add(p);
-        }
+    // public List<Hotel> filter(String nombre, String direccion, String telefono, String email, String web) {
+    //     List<Hotel> hostsByName = new ArrayList<>();
+    //     List<Hotel> hostsByAddress = new ArrayList<>();
+    //     List<Hotel> hostsByPhone = new ArrayList<>();
+    //     List<Hotel> hostsByMail = new ArrayList<>();
+    //     List<Hotel> hostsByWebsite = new ArrayList<>();
+    //     List<Boolean> vaciaPorNotFound = new ArrayList<>();
+    //     boolean p = false, q = false, r = false, s = false;
+    //     Set<Hotel> hostsFound = new HashSet<>();
+    //     if (p = nombre != null) {
+    //         hostsByName = findByName(nombre);
+    //         hostsFound.addAll(hostsByName);
+    //         vaciaPorNotFound.add(p);
+    //     }
 
-        if (q = direccion != null) {
-            hostsByAddress = findByAddress(direccion);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByAddress, vaciaPorNotFound);
-            vaciaPorNotFound.add(q);
-        }
+    //     if (q = direccion != null) {
+    //         hostsByAddress = findByAddress(direccion);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByAddress, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(q);
+    //     }
 
-        if (r = telefono != null) {
-            hostsByPhone = findByPhone(telefono);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPhone, vaciaPorNotFound);
-            vaciaPorNotFound.add(r);
-        }
+    //     if (r = telefono != null) {
+    //         hostsByPhone = findByPhone(telefono);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPhone, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(r);
+    //     }
 
-        if (s = email != null) {
-            hostsByMail = findByMail(email);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByMail, vaciaPorNotFound);
-            vaciaPorNotFound.add(s);
-        }
+    //     if (s = email != null) {
+    //         hostsByMail = findByMail(email);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByMail, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(s);
+    //     }
 
-        if (web != null) {
-            hostsByWebsite = findByWebsite(web);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByWebsite, vaciaPorNotFound);
-        }
+    //     if (web != null) {
+    //         hostsByWebsite = findByWebsite(web);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByWebsite, vaciaPorNotFound);
+    //     }
 
-        return new ArrayList<>(hostsFound);
-    }
+    //     return new ArrayList<>(hostsFound);
+    // }
 
-    private List<Hotel> findByName(String name) {
-        return hotelRepository.findAll().stream()
-                .filter(h -> h.getNombre().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
-    }
+    // private List<Hotel> findByName(String name) {
+    //     return hotelRepository.findAll().stream()
+    //             .filter(h -> h.getNombre().equalsIgnoreCase(name))
+    //             .collect(Collectors.toList());
+    // }
 
-    private List<Hotel> findByAddress(String dir) {
-        return hotelRepository.findAll().stream()
-                .filter(h -> h.getDireccion().equalsIgnoreCase(dir))
-                .collect(Collectors.toList());
-    }
+    // private List<Hotel> findByAddress(String dir) {
+    //     return hotelRepository.findAll().stream()
+    //             .filter(h -> h.getDireccion().equalsIgnoreCase(dir))
+    //             .collect(Collectors.toList());
+    // }
 
-    private List<Hotel> findByPhone(String telefono) {
-        return hotelRepository.findAll().stream()
-                .filter(h -> h.getTelefono().equalsIgnoreCase(telefono))
-                .collect(Collectors.toList());
-    }
+    // private List<Hotel> findByPhone(String telefono) {
+    //     return hotelRepository.findAll().stream()
+    //             .filter(h -> h.getTelefono().equalsIgnoreCase(telefono))
+    //             .collect(Collectors.toList());
+    // }
 
-    private List<Hotel> findByMail(String email) {
-        return hotelRepository.findAll().stream()
-                .filter(h -> h.getEmail().equalsIgnoreCase(email))
-                .collect(Collectors.toList());
-    }
+    // private List<Hotel> findByMail(String email) {
+    //     return hotelRepository.findAll().stream()
+    //             .filter(h -> h.getEmail().equalsIgnoreCase(email))
+    //             .collect(Collectors.toList());
+    // }
 
-    private List<Hotel> findByWebsite(String web) {
-        return hotelRepository.findAll().stream()
-                .filter(h -> h.getSitioWeb().equalsIgnoreCase(web))
-                .collect(Collectors.toList());
-    }
+    // private List<Hotel> findByWebsite(String web) {
+    //     return hotelRepository.findAll().stream()
+    //             .filter(h -> h.getSitioWeb().equalsIgnoreCase(web))
+    //             .collect(Collectors.toList());
+    // }
 
 
 

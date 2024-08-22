@@ -6,10 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.HashSet;
+// import java.util.Set;
+// import java.util.stream.Collectors;
+// import java.util.ArrayList;
+// import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +24,7 @@ import com.proyecto.hoteles.entidades.Huesped;
 import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HostRepository;
 import com.proyecto.hoteles.repositorios.RoomRepository;
-import com.proyecto.hoteles.utils.ListsUtil;
+// import com.proyecto.hoteles.utils.ListsUtil;
 
 import jakarta.persistence.criteria.Predicate;
 
@@ -108,116 +108,119 @@ public class ServicioHuesped {
         }
     }
 
-    public List<Huesped> findByName(String name) {
-        return hostRepository.findAll().stream()
-                .filter(h -> h.getNombre().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
-    }
+    // public List<Huesped> findByName(String name) {
+    //     return hostRepository.findAll().stream()
+    //             .filter(h -> h.getNombre().equalsIgnoreCase(name))
+    //             .collect(Collectors.toList());
+    // }
 
-    public List<Huesped> findBySurname(String surname) {
-        return hostRepository.findAll().stream()
-                .filter(h -> h.getApellido().equalsIgnoreCase(surname))
-                .collect(Collectors.toList());
-    }
+    // public List<Huesped> findBySurname(String surname) {
+    //     return hostRepository.findAll().stream()
+    //             .filter(h -> h.getApellido().equalsIgnoreCase(surname))
+    //             .collect(Collectors.toList());
+    // }
 
-    public List<Huesped> findByDniPassport(String document) {
-        return hostRepository.findAll().stream()
-                .filter(h -> h.getDniPasaporte().equalsIgnoreCase(document))
-                .collect(Collectors.toList());
-    }
+    // public List<Huesped> findByDniPassport(String document) {
+    //     return hostRepository.findAll().stream()
+    //             .filter(h -> h.getDniPasaporte().equalsIgnoreCase(document))
+    //             .collect(Collectors.toList());
+    // }
 
-    public List<Huesped> findByOrigin(String procedencia) {
-        return hostRepository.findAll().stream()
-                .filter(h -> h.getProcedencia().equalsIgnoreCase(procedencia))
-                .collect(Collectors.toList());
-    }
+    // public List<Huesped> findByOrigin(String procedencia) {
+    //     return hostRepository.findAll().stream()
+    //             .filter(h -> h.getProcedencia().equalsIgnoreCase(procedencia))
+    //             .collect(Collectors.toList());
+    // }
 
-    public List<Huesped> findByCheckIn(LocalDateTime checkInD, LocalDateTime checkInH) {
+    // public List<Huesped> findByCheckIn(LocalDateTime checkInD, LocalDateTime checkInH) {
         
-        return hostRepository.findAll().stream()
-        .filter(h -> h.getFechaCheckin().isAfter(checkInD) && h.getFechaCheckin().isBefore(checkInH))
-        .collect(Collectors.toList());
-    }
+    //     return hostRepository.findAll().stream()
+    //     .filter(h -> h.getFechaCheckin().isAfter(checkInD) && h.getFechaCheckin().isBefore(checkInH))
+    //     .collect(Collectors.toList());
+    // }
 
-    public List<Huesped> findByCheckOut(LocalDateTime checkOutD, LocalDateTime checkOutH) {
-        return hostRepository.findAll().stream()
-        .filter(h -> h.getFechaCheckout().isAfter(checkOutD) && h.getFechaCheckout().isBefore(checkOutH))
-        .collect(Collectors.toList());
-    }
-
-
-//llevar al final este y los de arriba
-    public List<Huesped> filter(String nombre, String apellido, String documento, String procedencia, String checkInD, String checkInH, String checkOutD, String checkOutH) throws BussinesRuleException{
-        List<Huesped> hostsByName = new ArrayList<>();
-        List<Huesped> hostsBySurname = new ArrayList<>();
-        List<Huesped> hostsByDocument = new ArrayList<>();
-        List<Huesped> hostsByOrigin = new ArrayList<>();
-        List<Huesped> hostsByCheckin = new ArrayList<>();
-        List<Huesped> hostsByCheckout = new ArrayList<>();
-        Set<Huesped> hostsFound = new HashSet<>();
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false, q = false, r = false, s = false, t = false;
-
-        LocalDateTime checkInDateD = null;
-        LocalDateTime checkInDateH = null;
-        LocalDateTime checkOutDateD = null;
-        LocalDateTime checkOutDateH = null;
+    // public List<Huesped> findByCheckOut(LocalDateTime checkOutD, LocalDateTime checkOutH) {
+    //     return hostRepository.findAll().stream()
+    //     .filter(h -> h.getFechaCheckout().isAfter(checkOutD) && h.getFechaCheckout().isBefore(checkOutH))
+    //     .collect(Collectors.toList());
+    // }
 
 
+//unused
+    // public List<Huesped> filter(String nombre, String apellido, String documento, String procedencia, String checkInD, String checkInH, String checkOutD, String checkOutH) throws BussinesRuleException{
+    //     List<Huesped> hostsByName = new ArrayList<>();
+    //     List<Huesped> hostsBySurname = new ArrayList<>();
+    //     List<Huesped> hostsByDocument = new ArrayList<>();
+    //     List<Huesped> hostsByOrigin = new ArrayList<>();
+    //     List<Huesped> hostsByCheckin = new ArrayList<>();
+    //     List<Huesped> hostsByCheckout = new ArrayList<>();
+    //     Set<Huesped> hostsFound = new HashSet<>();
+    //     List<Boolean> vaciaPorNotFound = new ArrayList<>();
+    //     boolean p = false, q = false, r = false, s = false, t = false;
 
-        if (p = nombre != null) {
-            hostsByName = findByName(nombre);
-            hostsFound.addAll(hostsByName);
-            vaciaPorNotFound.add(p);
-        }
+    //     LocalDateTime checkInDateD = null;
+    //     LocalDateTime checkInDateH = null;
+    //     LocalDateTime checkOutDateD = null;
+    //     LocalDateTime checkOutDateH = null;
 
-        if (q = apellido != null) {
-            hostsBySurname = findBySurname(apellido);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsBySurname, vaciaPorNotFound);
-            vaciaPorNotFound.add(q);
-        }
 
-        if (r = documento != null) {
-            hostsByDocument = findByDniPassport(documento);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDocument, vaciaPorNotFound);
-            vaciaPorNotFound.add(r);
-        }
+
+    //     if (p = nombre != null) {
+    //         // hostsByName = findByName(nombre);
+    //         hostsByName = hostRepository.findByNombre(nombre);
+    //         hostsFound.addAll(hostsByName);
+    //         vaciaPorNotFound.add(p);
+    //     }
+
+    //     if (q = apellido != null) {
+    //         // hostsBySurname = findBySurname(apellido);
+    //         hostsBySurname = hostRepository.findByApellido(apellido);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsBySurname, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(q);
+    //     }
+
+    //     if (r = documento != null) {
+    //         hostsByDocument = findByDniPassport(documento);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDocument, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(r);
+    //     }
         
-        if (t = procedencia != null) {
-            hostsByOrigin = findByOrigin(procedencia);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByOrigin, vaciaPorNotFound);
-            vaciaPorNotFound.add(t);
-        }
+    //     if (t = procedencia != null) {
+    //         hostsByOrigin = findByOrigin(procedencia);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByOrigin, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(t);
+    //     }
 
-        if (s = (checkInD != null && checkInH != null)) {
-            checkInDateD = stringToDate(checkInD);
-            checkInDateH = stringToDate(checkInH);
-            hostsByCheckin = findByCheckIn(checkInDateD, checkInDateH);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckin, vaciaPorNotFound);
-            vaciaPorNotFound.add(s);
-        }
+    //     if (s = (checkInD != null && checkInH != null)) {
+    //         checkInDateD = stringToDate(checkInD);
+    //         checkInDateH = stringToDate(checkInH);
+    //         hostsByCheckin = findByCheckIn(checkInDateD, checkInDateH);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckin, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(s);
+    //     }
 
-        if (checkOutD != null && checkOutH != null) {
-            checkOutDateD = stringToDate(checkOutD);
-            checkOutDateH = stringToDate(checkOutH);
-            hostsByCheckout = findByCheckOut(checkOutDateD, checkOutDateH);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout, vaciaPorNotFound);
-        }
+    //     if (checkOutD != null && checkOutH != null) {
+    //         checkOutDateD = stringToDate(checkOutD);
+    //         checkOutDateH = stringToDate(checkOutH);
+    //         hostsByCheckout = findByCheckOut(checkOutDateD, checkOutDateH);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByCheckout, vaciaPorNotFound);
+    //     }
 
-        return new ArrayList<>(hostsFound);
-    }
+    //     return new ArrayList<>(hostsFound);
+    // }
 
 
-    private LocalDateTime stringToDate(String fecha) throws BussinesRuleException{
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yyyy HH:mm][d/M/yyyy H:m]");
-        LocalDateTime f = null;
-        try {
-            f = LocalDateTime.parse(fecha, formatter);
-            return f;
-        } catch (Exception e) {
-            throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd/mm/yyyy HH:mm]", HttpStatus.BAD_REQUEST);
-        }
-    }
+    // unused
+    // private LocalDateTime stringToDate(String fecha) throws BussinesRuleException{
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yyyy HH:mm][d/M/yyyy H:m]");
+    //     LocalDateTime f = null;
+    //     try {
+    //         f = LocalDateTime.parse(fecha, formatter);
+    //         return f;
+    //     } catch (Exception e) {
+    //         throw new BussinesRuleException("400", "Bad request", "Error al introducir la fecha. El formato es: [dd/mm/yyyy HH:mm]", HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 
 
 

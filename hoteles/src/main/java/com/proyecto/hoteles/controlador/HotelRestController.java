@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.hoteles.entidades.Filtro;
@@ -151,7 +151,7 @@ public class HotelRestController {
     
 
     /**
-     * FILTER
+     * FILTER (unused)
      * 
      * @param nombre
      * @param direccion
@@ -160,16 +160,16 @@ public class HotelRestController {
      * @param web
      * @return Lista de hoteles que cumplen las condiciones
      */
-    @Operation(summary = "Permite buscar un hotel filtrando por sus campos")
-    @GetMapping("/filter")
-    public List<Hotel> getByParams(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String direccion,
-            @RequestParam(required = false) String telefono,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String web) {
-        return servicio.filter(nombre, direccion, telefono, email, web);
-    }
+    // @Operation(summary = "Permite buscar un hotel filtrando por sus campos")
+    // @GetMapping("/filter")
+    // public List<Hotel> getByParams(
+    //         @RequestParam(required = false) String nombre,
+    //         @RequestParam(required = false) String direccion,
+    //         @RequestParam(required = false) String telefono,
+    //         @RequestParam(required = false) String email,
+    //         @RequestParam(required = false) String web) {
+    //     return servicio.filter(nombre, direccion, telefono, email, web);
+    // }
 
 
 

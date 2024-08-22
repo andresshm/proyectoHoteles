@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 
 import com.proyecto.hoteles.entidades.Filtro;
 import com.proyecto.hoteles.entidades.Huesped;
@@ -133,7 +133,7 @@ public class HostRestController {
     }
 
     /**
-     * FILTER
+     * FILTER (unused)
      * 
      * @param nombre
      * @param apellido
@@ -144,19 +144,19 @@ public class HostRestController {
      * @return
      * @throws BussinesRuleException
      */
-    @Operation(summary = "Permite buscar un huésped filtrando por sus campos")
-    @GetMapping("/filter")
-    public List<Huesped> getByParams(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String apellido,
-            @RequestParam(required = false) String documento,
-            @RequestParam(required = false) String procedencia,
-            @RequestParam(required = false) String checkInD,
-            @RequestParam(required = false) String checkInH,
-            @RequestParam(required = false) String checkOutD,
-            @RequestParam(required = false) String checkOutH) throws BussinesRuleException {
-        return servicio.filter(nombre, apellido, documento, procedencia, checkInD,checkInH,checkOutD, checkOutH);
-    }
+    // @Operation(summary = "Permite buscar un huésped filtrando por sus campos")
+    // @GetMapping("/filter")
+    // public List<Huesped> getByParams(
+    //         @RequestParam(required = false) String nombre,
+    //         @RequestParam(required = false) String apellido,
+    //         @RequestParam(required = false) String documento,
+    //         @RequestParam(required = false) String procedencia,
+    //         @RequestParam(required = false) String checkInD,
+    //         @RequestParam(required = false) String checkInH,
+    //         @RequestParam(required = false) String checkOutD,
+    //         @RequestParam(required = false) String checkOutH) throws BussinesRuleException {
+    //     return servicio.filter(nombre, apellido, documento, procedencia, checkInD,checkInH,checkOutD, checkOutH);
+    // }
 
 
 

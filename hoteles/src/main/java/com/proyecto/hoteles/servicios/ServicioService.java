@@ -1,13 +1,13 @@
 package com.proyecto.hoteles.servicios;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
+// import java.util.ArrayList;
+// import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+// import java.util.Set;
+// import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,7 +22,7 @@ import com.proyecto.hoteles.entidades.Servicio;
 import com.proyecto.hoteles.exception.BussinesRuleException;
 //import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.ServiceRepository;
-import com.proyecto.hoteles.utils.ListsUtil;
+// import com.proyecto.hoteles.utils.ListsUtil;
 
 import jakarta.persistence.criteria.Predicate;
 
@@ -53,39 +53,39 @@ public class ServicioService {
  	}
 
 
-    public List<Servicio> findByName(String name){
-        return serviceRepository.findAll().stream()
-                                    .filter(h -> h.getNombre().equalsIgnoreCase(name))
-                                    .collect(Collectors.toList());
-    }
+    // public List<Servicio> findByName(String name){
+    //     return serviceRepository.findAll().stream()
+    //                                 .filter(h -> h.getNombre().equalsIgnoreCase(name))
+    //                                 .collect(Collectors.toList());
+    // }
 
 
-    public List<Servicio> findByDescription(String description){
-        return serviceRepository.findAll().stream()
-                                    .filter(s -> s.getDescripcion().toLowerCase().contains(description.toLowerCase()))
-                                    .collect(Collectors.toList());
-    }
+    // public List<Servicio> findByDescription(String description){
+    //     return serviceRepository.findAll().stream()
+    //                                 .filter(s -> s.getDescripcion().toLowerCase().contains(description.toLowerCase()))
+    //                                 .collect(Collectors.toList());
+    // }
 
 
-    public List<Servicio> filter(String nombre, String descripcion){
-        List<Servicio> hostsByName = new ArrayList<>();
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false;
+    // public List<Servicio> filter(String nombre, String descripcion){
+    //     List<Servicio> hostsByName = new ArrayList<>();
+    //     List<Boolean> vaciaPorNotFound = new ArrayList<>();
+    //     boolean p = false;
 
-        Set<Servicio> hostsFound = new HashSet<>();
-        if (p = nombre != null) {
-            hostsByName = findByName(nombre);
-            hostsFound.addAll(hostsByName);
-            vaciaPorNotFound.add(p);
-        }
+    //     Set<Servicio> hostsFound = new HashSet<>();
+    //     if (p = nombre != null) {
+    //         hostsByName = findByName(nombre);
+    //         hostsFound.addAll(hostsByName);
+    //         vaciaPorNotFound.add(p);
+    //     }
 
-        if (descripcion != null) {
-            List<Servicio> hostsByDescription = findByDescription(descripcion);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDescription, vaciaPorNotFound);
-        }
+    //     if (descripcion != null) {
+    //         List<Servicio> hostsByDescription = findByDescription(descripcion);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByDescription, vaciaPorNotFound);
+    //     }
 
-        return new ArrayList<>(hostsFound);
-    }
+    //     return new ArrayList<>(hostsFound);
+    // }
 
 
     

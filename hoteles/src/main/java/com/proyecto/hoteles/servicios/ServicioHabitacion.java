@@ -1,13 +1,13 @@
 package com.proyecto.hoteles.servicios;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
+// import java.util.ArrayList;
+// import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+// import java.util.Set;
+// import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +24,7 @@ import com.proyecto.hoteles.exception.BussinesRuleException;
 import com.proyecto.hoteles.repositorios.HostRepository;
 import com.proyecto.hoteles.repositorios.HotelRepository;
 import com.proyecto.hoteles.repositorios.RoomRepository;
-import com.proyecto.hoteles.utils.ListsUtil;
+// import com.proyecto.hoteles.utils.ListsUtil;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
@@ -201,61 +201,61 @@ public class ServicioHabitacion {
 
     }
 
-    public List<Habitacion> filter(String numero, String tipo, Float precio) {
-        List<Habitacion> hostsByNumber = new ArrayList<>();
-        List<Habitacion> hostsByType = new ArrayList<>();
+    // public List<Habitacion> filter(String numero, String tipo, Float precio) {
+    //     List<Habitacion> hostsByNumber = new ArrayList<>();
+    //     List<Habitacion> hostsByType = new ArrayList<>();
 
-        // float no puede ser null porque es un tipo primitivo, pero Float si
-        // si es nulo, asignamos 0$ a precio para que no encuentre ninguna habitacion
-        // y no entorpezca la busqueda
-        Float floatWrapper = precio;
-        if (floatWrapper == null) {
-            precio = 0.0f;
-        } else {
-            floatWrapper = precio;
-        }
-        List<Habitacion> hostsByPrice = findByPrice(precio);
+    //     // float no puede ser null porque es un tipo primitivo, pero Float si
+    //     // si es nulo, asignamos 0$ a precio para que no encuentre ninguna habitacion
+    //     // y no entorpezca la busqueda
+    //     Float floatWrapper = precio;
+    //     if (floatWrapper == null) {
+    //         precio = 0.0f;
+    //     } else {
+    //         floatWrapper = precio;
+    //     }
+    //     List<Habitacion> hostsByPrice = findByPrice(precio);
 
-        List<Boolean> vaciaPorNotFound = new ArrayList<>();
-        boolean p = false, q = false;
-        Set<Habitacion> hostsFound = new HashSet<>();
-        if (p = numero != null) {
-            hostsByNumber = findByNumber(numero);
-            hostsFound.addAll(hostsByNumber);
-            vaciaPorNotFound.add(p);
-        }
+    //     List<Boolean> vaciaPorNotFound = new ArrayList<>();
+    //     boolean p = false, q = false;
+    //     Set<Habitacion> hostsFound = new HashSet<>();
+    //     if (p = numero != null) {
+    //         hostsByNumber = findByNumber(numero);
+    //         hostsFound.addAll(hostsByNumber);
+    //         vaciaPorNotFound.add(p);
+    //     }
 
-        if (q = tipo != null) {
-            hostsByType = findByType(tipo);
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByType, vaciaPorNotFound);
-            vaciaPorNotFound.add(q);
-        }
+    //     if (q = tipo != null) {
+    //         hostsByType = findByType(tipo);
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByType, vaciaPorNotFound);
+    //         vaciaPorNotFound.add(q);
+    //     }
 
-        if (floatWrapper != null) {
-            ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPrice, vaciaPorNotFound);
-        }
+    //     if (floatWrapper != null) {
+    //         ListsUtil.interseccionSinListaVacia(hostsFound, hostsByPrice, vaciaPorNotFound);
+    //     }
 
-        return new ArrayList<>(hostsFound);
-    }
+    //     return new ArrayList<>(hostsFound);
+    // }
 
-    private List<Habitacion> findByNumber(String number) {
-        return roomRepository.findAll().stream()
-                .filter(h -> h.getNumero().equals(number))
-                .collect(Collectors.toList());
+    // private List<Habitacion> findByNumber(String number) {
+    //     return roomRepository.findAll().stream()
+    //             .filter(h -> h.getNumero().equals(number))
+    //             .collect(Collectors.toList());
 
-    }
+    // }
 
-    private List<Habitacion> findByType(String type) {
-        return roomRepository.findAll().stream()
-                .filter(h -> h.getTipo().equalsIgnoreCase(type))
-                .collect(Collectors.toList());
-    }
+    // private List<Habitacion> findByType(String type) {
+    //     return roomRepository.findAll().stream()
+    //             .filter(h -> h.getTipo().equalsIgnoreCase(type))
+    //             .collect(Collectors.toList());
+    // }
 
-    private List<Habitacion> findByPrice(float price) {
-        return roomRepository.findAll().stream()
-                .filter(h -> h.getPrecioNoche() == price)
-                .collect(Collectors.toList());
-    }
+    // private List<Habitacion> findByPrice(float price) {
+    //     return roomRepository.findAll().stream()
+    //             .filter(h -> h.getPrecioNoche() == price)
+    //             .collect(Collectors.toList());
+    // }
 
 
 
